@@ -92,7 +92,7 @@ bool hotjuice::PluginManager::tryToLoad(std::string pathLib) {
 #elif __APPLE__
 	// change id of dylib to temp id
     if(useHotReloading) {
-        ofxHotReloaderUtils::Execute("install_name_tool -id /" + ofxHotReloaderUtils::getFileBaseName(pathToLibrary) + (nameTempDir != "" ? "." + nameTempDir : "") + "." + ofxHotReloaderUtils::getFileExtension(pathLib) + " \"" + pathLib + "\"");
+        Utils::Execute("install_name_tool -id /" + Utils::getFileBaseName(pathToLibrary) + (nameTempDir != "" ? "." + nameTempDir : "") + "." + Utils::getFileExtension(pathLib) + " \"" + pathLib + "\"");
     }
     instanceLib = dlopen(pathLib.c_str(), RTLD_LAZY);
 #endif
