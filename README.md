@@ -6,16 +6,15 @@ For oF subplugin:
 
 Show contents of *.xcodeproj, find project.pbxproj file and open it with xcode, then change: 
 
-- Change productType string to  `com.apple.product-type.library.dynamic`
-- Change name of project (above productType) to  `libNAME`
-- Change PRODUCT_NAME for debug to  `$(TARGET_NAME)` instead of `$(TARGET_NAME)Debug`
-- Clean subplugin product if you switched target (Release/ Debug)
+ - Change `productType` string to  `com.apple.product-type.library.dynamic`
+ - Change name of project (above productType) to  `libNAME`
+ - Change `PRODUCT_NAME` for debug to  `$(TARGET_NAME)` instead of `$(TARGET_NAME)Debug`
 
 Set for xcode:
 
  - Change bundle id of your app, for example `com.company.application`
  - Run "Clean" command if you switched target (Release/ Debug)
- - Set optimization level to `None` for Release
+ - Set `Optimization Level` to `None` for Release
  - Add header search path to `hotjuice` folder
  - Set "Preprocessor Macros"
 
