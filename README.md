@@ -13,6 +13,7 @@ Show contents of *.xcodeproj, find project.pbxproj file and open it with xcode, 
 
 Set for xcode:
 
+ - Change bundle id of your app, for example `com.company.application`
  - Run "Clean" command if you switched target (Release/ Debug)
  - Set optimization level to `None` for Release
  - Add header search path to `hotjuice` folder
