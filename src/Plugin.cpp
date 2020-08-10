@@ -64,6 +64,10 @@ void hotjuice::Plugin::setWindowSize(int w, int h) {
 	if (plugin) plugin->setWindowSize(w, h);
 }
 
+void hotjuice::Plugin::setDesktopScale(float desktopScale) {
+	if (plugin) plugin->setDesktopScale(desktopScale);
+}
+
 void hotjuice::Plugin::mouseDragged(int x, int y, int button) {
 	if (plugin) plugin->mouseDragged(x, y, button);
 }

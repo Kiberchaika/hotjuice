@@ -27,6 +27,7 @@ namespace hotjuice {
 		void cleanup(void* in = nullptr, void* out = nullptr);
 
 		void setWindowSize(int w, int h);
+		void setDesktopScale(float desktopScale);
 
 		void mouseDragged(int x, int y, int button);
 		void mouseMoved(int x, int y);

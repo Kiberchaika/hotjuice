@@ -58,6 +58,9 @@ void hotjuice::PluginBase::cleanup(void * in, void * out) {
 void hotjuice::PluginBase::setWindowSize(int w, int h) {
 }
 
+void hotjuice::PluginBase::setDesktopScale(float desktopScale) {
+}
+
 void hotjuice::PluginBase::mouseDragged(int x, int y, int button) {
 }
 

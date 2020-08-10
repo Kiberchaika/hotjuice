@@ -64,6 +64,7 @@ namespace hotjuice {
 		virtual void cleanup(void* in = nullptr, void* out = nullptr);
 
 		virtual void setWindowSize(int w, int h);
+		virtual void setDesktopScale(float desktopScale);
 
 		virtual void mouseDragged(int x, int y, int button);
 		virtual void mouseMoved(int x, int y);
