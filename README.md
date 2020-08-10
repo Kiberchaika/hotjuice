@@ -13,9 +13,9 @@ Show contents of *.xcodeproj, find project.pbxproj file and open it with xcode, 
 
 Set for xcode:
 
- - Clean subplugin product if you switched target (Release/ Debug)
- - Set optimization level to None for Release
- - Add header search path to libs/hotjuice folder
+ - Run "Clean" command if you switched target (Release/ Debug)
+ - Set optimization level to `None` for Release
+ - Add header search path to `hotjuice` folder
  - Set "Preprocessor Macros"
 
 		MURKA_OF
