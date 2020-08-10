@@ -88,6 +88,7 @@ void hotjuice::PluginManager::addCallbackAfterLoad(CallbackLoad callbackAfterLoa
 bool hotjuice::PluginManager::tryToLoad(std::string pathLib) {
 
 #ifdef _WIN32
+	SetDllDirectoryA(Utils::getEnclosingDirectory(pathLib).c_str()); // fix for Windows
 	instanceLib = LoadLibraryA(pathLib.c_str());
 #elif __APPLE__
 	// change id of dylib to temp id
@@ -101,7 +102,8 @@ bool hotjuice::PluginManager::tryToLoad(std::string pathLib) {
 	if (!instanceLib) {
 #ifdef _WIN32
 		std::cout << "could not load the dynamic library: " << pathLib << std::endl;
-		std::cout << "error: " << GetLastError() << std::endl;
+		unsigned long error = GetLastError();
+		std::cout << "error: " << error << std::endl;
 #elif __APPLE__
 		std::cout << "could not load the dynamic library: " << pathLib << std::endl;
         char* error = dlerror();
