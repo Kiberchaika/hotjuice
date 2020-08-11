@@ -44,11 +44,15 @@ void hotjuice::Plugin::setup(void* in, void* out) {
 	if (plugin) plugin->setup(in, out);
 }
 
+void hotjuice::Plugin::setupRenderer(void* in, void* out) {
+	if (plugin) plugin->setupRenderer(in, out);
+}
+
 void hotjuice::Plugin::update(void* in, void* out) {
 	if (plugin) plugin->update(in, out);
 }
 
-void hotjuice::Plugin::process(void * in, void * out) {
+void hotjuice::Plugin::process(void* in, void* out) {
 	if (plugin) plugin->process(in, out);
 }
 

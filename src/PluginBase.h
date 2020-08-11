@@ -58,6 +58,7 @@ namespace hotjuice {
 		virtual bool isReloaded();
 
 		virtual void setup(void* in = nullptr, void* out = nullptr);
+		virtual void setupRenderer(void* in = nullptr, void* out = nullptr);
 		virtual void update(void* in = nullptr, void* out = nullptr);
 		virtual void process(void* in = nullptr, void* out = nullptr);
 		virtual void draw(void* in = nullptr, void* out = nullptr);

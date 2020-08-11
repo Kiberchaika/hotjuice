@@ -42,11 +42,13 @@ bool hotjuice::PluginBase::isReloaded() {
 void hotjuice::PluginBase::setup(void * in, void * out) {
 }
 
+void hotjuice::PluginBase::setupRenderer(void * in, void * out) {
+}
+
 void hotjuice::PluginBase::update(void * in, void * out) {
 }
 
-void hotjuice::PluginBase::process(void * in, void * out)
-{
+void hotjuice::PluginBase::process(void * in, void * out) {
 }
 
 void hotjuice::PluginBase::draw(void * in, void * out) {

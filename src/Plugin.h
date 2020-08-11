@@ -21,6 +21,7 @@ namespace hotjuice {
 		bool isReloaded();
 
 		void setup(void* in = nullptr, void* out = nullptr);
+		void setupRenderer(void* in = nullptr, void* out = nullptr);
 		void update(void* in = nullptr, void* out = nullptr);
 		void process(void* in = nullptr, void* out = nullptr);
 		void draw(void* in = nullptr, void* out = nullptr);
