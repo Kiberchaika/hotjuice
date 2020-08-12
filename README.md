@@ -41,5 +41,7 @@ Set for xcode:
 
 		install_name_tool -change @executable_path/libfmodex.dylib @loader_path/libfmodex.dylib "$APPSUPPORT_PATH/$PRODUCT_NAME.dylib" 
 
+		#cp -R "$TARGET_BUILD_DIR/../../resources" "$APPSUPPORT_PATH/resources"
+
 		echo "$GCC_PREPROCESSOR_DEFINITIONS";
 
