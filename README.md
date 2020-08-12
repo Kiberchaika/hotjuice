@@ -17,7 +17,7 @@ Set for xcode:
 
  - Add `hotjuice/src` folder to header search path, add contained files to prjoect
  - Run "Clean" command if you switched target (Release/ Debug)
- - Change bundle id of your app, for example `com.company.application`
+ - Change `bundle id` of your app, for example `com.company.application`
  - Set `Optimization Level` to `None` for Release
  - Set "Preprocessor Macros"
 
