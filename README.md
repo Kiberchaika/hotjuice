@@ -24,7 +24,7 @@ Set for xcode:
 		MURKA_OF
 		MURKA_OFFSCREEN
 
-- Set "Run script" in “Build Phases” tab after "link" setting with and change `COMPANY_NAME` to your name:
+- Set "Run script" in “Build Phases” tab after "link" setting with and change `COMPANY_NAME` with your name:
 
 		COMPANY_NAME="MyCompany"
 
