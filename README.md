@@ -28,11 +28,6 @@ Set for xcode:
 
 		COMPANY_NAME="MyCompany"
 
-		mkdir -p "$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/"
-
-		# Copy default icon file into App/Resources
-		rsync -aved "$ICON_FILE" "$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/"
-
 		APPSUPPORT_PATH="/Users/$USER/Library/Application Support/$COMPANY_NAME/$PRODUCT_BUNDLE_IDENTIFIER"
 		echo $APPSUPPORT_PATH;
 
