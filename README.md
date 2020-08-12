@@ -3,7 +3,7 @@
 A framework for making projects in Juce with rich OpenGL UI and hot reloading of plugin code via dynamic linking
 
 For JUCE project:
- - Add `hotjuice` folder to header search path
+ - Add `hotjuice/src` folder to header search path, add contained files to prjoect
 
 For oF subplugin:
 
@@ -15,7 +15,7 @@ Show contents of *.xcodeproj, find project.pbxproj file and open it with xcode, 
 
 Set for xcode:
 
- - Add `hotjuice` folder to header search path
+ - Add `hotjuice/src` folder to header search path, add contained files to prjoect
  - Run "Clean" command if you switched target (Release/ Debug)
  - Change bundle id of your app, for example `com.company.application`
  - Set `Optimization Level` to `None` for Release
