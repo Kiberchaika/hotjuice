@@ -10,7 +10,7 @@ For oF subplugin:
 Show contents of *.xcodeproj, find project.pbxproj file and open it with xcode, then change: 
 
  - Change `productType` string to  `com.apple.product-type.library.dynamic`
- - Change name of project (above productType) to  `libNAME`
+ - Change `name` of project (above productType) to  `libNAME`
  - Change `PRODUCT_NAME` for debug to  `$(TARGET_NAME)` instead of `$(TARGET_NAME)Debug`
 
 Set for xcode:
