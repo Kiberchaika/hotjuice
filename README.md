@@ -2,6 +2,9 @@
 # hotjuice
 A framework for making projects in Juce with rich OpenGL UI and hot reloading of plugin code via dynamic linking
 
+For JUCE project:
+ - Add header search path to `hotjuice` folder
+
 For oF subplugin:
 
 Show contents of *.xcodeproj, find project.pbxproj file and open it with xcode, then change: 
@@ -12,10 +15,10 @@ Show contents of *.xcodeproj, find project.pbxproj file and open it with xcode, 
 
 Set for xcode:
 
- - Change bundle id of your app, for example `com.company.application`
- - Run "Clean" command if you switched target (Release/ Debug)
- - Set `Optimization Level` to `None` for Release
  - Add header search path to `hotjuice` folder
+ - Run "Clean" command if you switched target (Release/ Debug)
+ - Change bundle id of your app, for example `com.company.application`
+ - Set `Optimization Level` to `None` for Release
  - Set "Preprocessor Macros"
 
 		MURKA_OF
