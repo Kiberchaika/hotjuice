@@ -24,25 +24,27 @@ Set for xcode:
 		MURKA_OF
 		MURKA_OFFSCREEN
 
-- Set "Run script" in “Build Phases” tab after "link" setting with:
+- Set "Run script" in “Build Phases” tab after "link" setting with and change `COMPANY_NAME` to your name:
+
+		COMPANY_NAME="MyCompany"
 
 		mkdir -p "$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/"
+
 		# Copy default icon file into App/Resources
 		rsync -aved "$ICON_FILE" "$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/"
 
-		mkdir -p "/Users/$USER/Library/Application Support/$PRODUCT_BUNDLE_IDENTIFIER/"
+		mkdir -p "/Users/$USER/Library/Application Support/$COMPANY_NAME/$PRODUCT_BUNDLE_IDENTIFIER/"
 
-		APPSUPPORT_PATH="/Users/$USER/Library/Application Support/$PRODUCT_BUNDLE_IDENTIFIER/"
-
+		APPSUPPORT_PATH="/Users/$USER/Library/Application Support/$COMPANY_NAME/$PRODUCT_BUNDLE_IDENTIFIER/"
 		echo $APPSUPPORT_PATH;
 
 		# Copy libfmod and change install directory for fmod to run
 
-		rsync -aved "$OF_PATH/libs/fmodex/lib/osx/libfmodex.dylib" "/Users/$USER/Library/Application Support/$PRODUCT_BUNDLE_IDENTIFIER/";
+		rsync -aved "$OF_PATH/libs/fmodex/lib/osx/libfmodex.dylib" "/Users/$USER/Library/Application Support/$COMPANY_NAME/$PRODUCT_BUNDLE_IDENTIFIER/";
 
-		rsync -aved  "$TARGET_BUILD_DIR/$PRODUCT_NAME.dylib" "/Users/$USER/Library/Application Support/$PRODUCT_BUNDLE_IDENTIFIER/$PRODUCT_NAME.dylib"
+		rsync -aved  "$TARGET_BUILD_DIR/$PRODUCT_NAME.dylib" "/Users/$USER/Library/Application Support/$COMPANY_NAME/$PRODUCT_BUNDLE_IDENTIFIER/$PRODUCT_NAME.dylib"
 
-		install_name_tool -change @executable_path/libfmodex.dylib    @loader_path/libfmodex.dylib "/Users/$USER/Library/Application Support/$PRODUCT_BUNDLE_IDENTIFIER/$PRODUCT_NAME.dylib" 
+		install_name_tool -change @executable_path/libfmodex.dylib    @loader_path/libfmodex.dylib "/Users/$USER/Library/Application Support/$COMPANY_NAME/$PRODUCT_BUNDLE_IDENTIFIER/$PRODUCT_NAME.dylib" 
 
 		echo "$GCC_PREPROCESSOR_DEFINITIONS";
 
