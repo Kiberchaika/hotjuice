@@ -37,6 +37,8 @@ filereader = open(path_to_xcode_project, 'r')
 filetext = filereader.read()
 filereader.close()
 filetext = filetext.replace('com.apple.product-type.application', 'com.apple.product-type.library.dynamic')
+if (filetext.find('$(TARGET_NAME)Debug') >= 0):
+    print("found debug product name... should fix to release one")
 filetext = filetext.replace('$(TARGET_NAME)Debug', '$(TARGET_NAME)')
 filetext = filetext.replace('"' + sys.argv[1] + '"', '"lib' + sys.argv[1] + '"')
 
@@ -59,7 +61,7 @@ rsync -aved "$OF_PATH/libs/fmodex/lib/osx/libfmodex.dylib" "$APPSUPPORT_PATH/"
 
 rsync -aved  "$TARGET_BUILD_DIR/$PRODUCT_NAME.dylib" "$APPSUPPORT_PATH/$PRODUCT_NAME.dylib"
 
-install_name_tool -change @executable_path/libfmodex.dylib @loader_path/libfmodex.dylib "$APPSUPPORT_PATH/$PRODUCT_NAME.dylib" 
+install_name_tool -change @executable_path/libfmodex.dylib @loader_path/libfmodex.dylib "$APPSUPPORT_PATH/lib$PRODUCT_NAME.dylib" 
 
 cp -R "RESOURCES_SOURCE" "$APPSUPPORT_PATH/"
 
@@ -79,7 +81,8 @@ for target in project.objects.get_targets(None):
 
         print("script #", id)
         thisscript = build_phase.shellScript
-        if thisscript.strip().startswith('COMPANY') # or thisscript.strip().startswith('mkdir -p "$TARGET_BUILD_DIR'):
+        # TODO: also remove and replace the bundled oF script that starts with 'mkdir -p "$TARGET_BUILD_DIR'
+        if thisscript.strip().startswith('COMPANY'):
             if not foundScript:
                 build_phase.shellScript = finalscript
                 foundScript = True
@@ -101,6 +104,11 @@ for target in project.objects.get_targets(None):
 
 if not foundScript:
     project.add_run_script(script=finalscript)
+
+# adding preprocessor macros for murka
+
+project.add_flags('GCC_PREPROCESSOR_DEFINITIONS', 'MURKA_OF')
+project.add_flags('GCC_PREPROCESSOR_DEFINITIONS', 'MURKA_OFFSCREEN')
 
 # removing extra files
 
