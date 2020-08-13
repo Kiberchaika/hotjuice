@@ -27,23 +27,36 @@ else:
 path_to_xcode_project = os.path.join(os.getcwd(), sys.argv[1]) + "/" +  sys.argv[1] + ".xcodeproj" + "/project.pbxproj"
 print(path_to_xcode_project)
 
-project = XcodeProject.load(path_to_xcode_project)
-
-project.objects
-
 # Updating product type
 
 filereader = open(path_to_xcode_project, 'r')
 filetext = filereader.read()
 filereader.close()
+if (filetext.find('com.apple.product-type.application')):
+    print("replacing product type...")
 filetext = filetext.replace('com.apple.product-type.application', 'com.apple.product-type.library.dynamic')
+
+if (filetext.find('com.apple.product-type.application') >= 0):
+    print("stil the same product type!")
+
 if (filetext.find('$(TARGET_NAME)Debug') >= 0):
-    print("found debug product name... should fix to release one")
+    print("replacing debug product name...")
 filetext = filetext.replace('$(TARGET_NAME)Debug', '$(TARGET_NAME)')
+
+if (filetext.find('$(TARGET_NAME)Debug') >= 0):
+    print("STILL THE SAME!!!")
 filetext = filetext.replace('"' + sys.argv[1] + '"', '"lib' + sys.argv[1] + '"')
 
+os.remove(path_to_xcode_project)
+
 filewriter = open(path_to_xcode_project, 'w')
-filewriter.write(filetext)
+n = filewriter.write(filetext)
+filewriter.close()
+
+
+
+project = XcodeProject.load(path_to_xcode_project)
+
 
 # Updating build script
 
