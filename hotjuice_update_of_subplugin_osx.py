@@ -1,9 +1,19 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import os
 import sys
 from pbxproj import XcodeProject
 from pbxproj import PBXShellScriptBuildPhase
+
+# loading project settings
+sys.path.append(os.getcwd())
+try:
+    from project_settings import *
+except :
+    print("project.settings.py not found in ", os.getcwd())
+    print("please create project_settings.py with project settings as in the template")
+    quit()
+
 
 print("working dir:", os.getcwd())
 print("__file__:", __file__)
@@ -36,8 +46,7 @@ filewriter.write(filetext)
 # Updating build script
 
 runscript = \
-'''
-COMPANY_NAME="Mach1Spatial"
+'''COMPANY_NAME="COMPANYNAME"
 
 APPSUPPORT_PATH="/Users/$USER/Library/Application Support/$COMPANY_NAME/$PRODUCT_BUNDLE_IDENTIFIER"
 echo $APPSUPPORT_PATH;
@@ -58,6 +67,7 @@ echo "$GCC_PREPROCESSOR_DEFINITIONS";
 '''
 
 finalscript = runscript.replace("RESOURCES_SOURCE", os.path.join(os.getcwd(), "resources"))
+finalscript = finalscript.replace("COMPANYNAME", company_name)
 
 foundScript = False
 id = 0
@@ -68,15 +78,35 @@ for target in project.objects.get_targets(None):
             continue
 
         print("script #", id)
-        if (build_phase.shellScript.startswith("COMPANY_NAME")) or (build_phase.shellScript.startswith('mkdir -p "$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/"')):
-            print("found the script!")
-            print(build_phase.shellScript)
-            build_phase.shellScript = finalscript
-            foundScript = True
+        thisscript = build_phase.shellScript
+        if thisscript.strip().startswith('COMPANY') # or thisscript.strip().startswith('mkdir -p "$TARGET_BUILD_DIR'):
+            if not foundScript:
+                build_phase.shellScript = finalscript
+                foundScript = True
+                print("replaced the script with the correct one")
+            else:
+                # remove this script
+                project.remove_run_script(build_phase.shellScript)
+                print("removed extra script")
+        else:
+            print(thisscript.strip()[:10], " does not begin with ", 'COMPANY'.strip())
+        # if (build_phase.shellScript.startswith("COMPANY_NAME")) or (build_phase.shellScript.startswith('mkdir -p "$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/"')):
+        #     print("found the script!")
+        #     print(build_phase.shellScript)
+        #     build_phase.shellScript = finalscript
+        #     foundScript = True
+        # else:
+        #     print("this script doesn't start with companyname:", build_phase.shellScript)
         id += 1
 
 if not foundScript:
     project.add_run_script(script=finalscript)
+
+# removing extra files
+
+project.remove_files_by_path("src/ofApp.cpp")
+project.remove_files_by_path("src/ofApp.h")
+project.remove_files_by_path("src/main.cpp")
 
 # adding files
 
@@ -85,7 +115,7 @@ project.add_folder(hotjuice_path + "/src", parent=group)
 
 # setting bundle id
 
-project.set_flags('PRODUCT_BUNDLE_IDENTIFIER','com.productbundle.identifier')
+project.set_flags('PRODUCT_BUNDLE_IDENTIFIER',bundle_id)
 
 project.save()
 
