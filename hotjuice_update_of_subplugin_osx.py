@@ -2,8 +2,12 @@
 
 import os
 import sys
+
+print("python path:", sys.executable)
+
 from pbxproj import XcodeProject
 from pbxproj import PBXShellScriptBuildPhase
+
 
 # loading project settings
 sys.path.append(os.getcwd())
@@ -74,7 +78,7 @@ rsync -aved "$OF_PATH/libs/fmodex/lib/osx/libfmodex.dylib" "$APPSUPPORT_PATH/"
 
 rsync -aved  "$TARGET_BUILD_DIR/$PRODUCT_NAME.dylib" "$APPSUPPORT_PATH/$PRODUCT_NAME.dylib"
 
-install_name_tool -change @executable_path/libfmodex.dylib @loader_path/libfmodex.dylib "$APPSUPPORT_PATH/lib$PRODUCT_NAME.dylib" 
+install_name_tool -change @executable_path/libfmodex.dylib @loader_path/libfmodex.dylib "$APPSUPPORT_PATH/$PRODUCT_NAME.dylib" 
 
 cp -R "RESOURCES_SOURCE" "$APPSUPPORT_PATH/"
 
