@@ -36,9 +36,18 @@ class MyPlugin : public ofxPluginWithRender {
 	float b = 0;
 
 	bool isCloned = false;
+	std::string pathToResources;
 
 public:
 	MyPlugin() {
+#if defined (_WIN32)
+		std::string pluginPath = "MyCompany/Hotjuice oF and JUCE example";
+		pathToResources = hotjuice::Utils::getAppDataDirectory() + pluginPath + "/resources/";
+#elif defined (__APPLE__)
+		std::string pluginPath = "MyCompany/com.company.application";
+		pathToResources = hotjuice::Utils::getAppDataDirectory() + pluginPath + "/resources/";
+#endif
+
 		cout << "creating MyPlugin" << endl;
 	}
 
@@ -54,14 +63,13 @@ public:
 	void setupRenderer(void* in, void* out) override {
 		ofxPluginWithRender::setupRenderer();
 
-		std::string resourcesPath = hotjuice::Utils::getAppDataDirectory() + "/MyCompany/com.company.application/resources/";
 
 		m.setWindow((ofAppBaseWindow*)(&window));
 		m.setRenderer((ofBaseGLRenderer*)(window.renderer().get()));
 		m.setupFonts(
-			resourcesPath + "Roboto-Regular.ttf", 12,
-			resourcesPath + "Roboto-Regular.ttf", 20,
-			resourcesPath + "Roboto-Regular.ttf", 12,
+			pathToResources + "Roboto-Regular.ttf", 12,
+			pathToResources + "Roboto-Regular.ttf", 20,
+			pathToResources + "Roboto-Regular.ttf", 12,
 			true
 		);
 	}
