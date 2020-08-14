@@ -74,12 +74,19 @@ Juceglvst_audioProcessor::Juceglvst_audioProcessor()
 
 	plugin = hotreloader->createPluginObject("MyPlugin");
 
-	startTimer(1000);
+	startTimer(100);
 }
 
 void Juceglvst_audioProcessor::timerCallback()
 {
 	hotreloader->tryToLoadIfUpdated();
+
+	if (!isReloading && plugin) {
+		float in[2] = { 0, 0 };
+		float out = 0;
+
+		plugin->update(&in, &out);
+	}
 }
 
 Juceglvst_audioProcessor::~Juceglvst_audioProcessor()
@@ -194,6 +201,7 @@ bool Juceglvst_audioProcessor::isBusesLayoutSupported (const BusesLayout& layout
   #endif
 }
 #endif
+
 
 void Juceglvst_audioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {

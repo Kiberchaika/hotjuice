@@ -67,8 +67,6 @@ class MainComponent   : public OpenGLAppComponent, public KeyListener
 {
 public:
     Juceglvst_audioProcessor* processor;
-  
-    float out;
 
 public:
     //==============================================================================

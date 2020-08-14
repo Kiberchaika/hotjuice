@@ -57,12 +57,10 @@ void MainComponent::render()
 			processor->needToReinitRender = false;
 		}
 
-		float in[2] = { 0, 0 };
-		processor->plugin->update(&in, &out);
-
+		/*
 		processor->plugin->custom("test");
 		processor->plugin->custom("test2");
-
+		*/
 
 		// This clears the context with a black background.
 		OpenGLHelpers::clear(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
@@ -70,7 +68,7 @@ void MainComponent::render()
 		float desktopScale = openGLContext.getRenderingScale();
 		processor->plugin->setWindowSize(roundToInt(desktopScale * getWidth()), roundToInt(desktopScale * getHeight()));
 
-		processor->plugin->draw(in);
+		processor->plugin->draw();
 	}
 
 }
