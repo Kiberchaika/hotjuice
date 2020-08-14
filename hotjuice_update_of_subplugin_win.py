@@ -3,6 +3,7 @@
 # associate py with local https://gist.github.com/Hrxn/e2180e3c34bbed2c2e7e
 
 import os
+from xml.sax import saxutils
 from lxml import etree
 
 pathWorkingDir = os.getcwd()
@@ -49,13 +50,18 @@ include_files('ClCompile', '.cpp')
 include_files('ClInclude', '.h')
 
 path_to_plugin = os.path.join(os.environ.get("APPDATA"), company_name, project_name)
+
 for el in tree.xpath('//ns:PostBuildEvent', namespaces=namespaces):
-    el.append(etree.XML('<Command>' +
-    'mkdir ' + '"' + path_to_plugin + '" ' +
-    ' &amp; ' + 'robocopy "' + os.path.join(pathWorkingDir, 'resources') + '" "' + path_to_plugin + '/resources/" /E '  +
-    ' &amp; ' + 'robocopy "$(ProjectDir)bin/" "' + path_to_plugin + '/" "*.dll" "*.pdb" /is '  +
-    ' &amp; ' + 'exit 0' +
-    '</Command>'))
+    el.find('..').append(etree.XML('<CustomBuildStep><Command>' +
+    saxutils.escape('mkdir ' + '"' + path_to_plugin + '" ') +
+    saxutils.escape(' & ' + 'robocopy "' + os.path.join(pathWorkingDir, 'resources') + '" "' + path_to_plugin + '/resources/" /E ') +
+    saxutils.escape(' & ' + 'robocopy "$(ProjectDir)bin/" "' + path_to_plugin + '/" "*.dll" "*.pdb" /is ') +
+    saxutils.escape(' & ' + 'exit 0') +
+    '</Command><Outputs>_log</Outputs></CustomBuildStep>'))
+
+for el in tree.xpath('//ns:OutDir', namespaces=namespaces):
+    el.find('..').append(etree.XML('<CustomBuildAfterTargets>Build</CustomBuildAfterTargets>'))
+
 
 #tree.write('example_oF_subplugin.vcxproj')
 tree.write(path_to_project)
