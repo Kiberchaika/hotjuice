@@ -204,6 +204,31 @@ public:
 		fOut[0] = fIn[0] * fIn[1] + 10000;
 	}
 
+	
+	float phase = 0;
+
+	void process(void* in, void* out) override {
+		std::tuple<std::vector<float*>, int>& data = *(std::tuple<std::vector<float*>, int> *)in;
+
+		std::vector<float*> buffers = std::get<0>(data);
+		int samples = std::get<1>(data);
+
+		while (phase > TWO_PI) {
+			phase -= TWO_PI;
+		}
+
+		float phaseOrig = phase;
+		for (int i = 0; i < buffers.size(); i++) {
+			phase = phaseOrig;
+			for (int j = 0; j < samples; j++) {
+				phase += 0.025;
+				buffers[i][j] = 0.2 * sin(phase);
+			}
+		}
+
+		//_log += "buffer count: "  +  std::to_string(std::get<1>(data)) + "\r\n";
+	}
+
 	void clone(hotjuice::PluginBase* pluginBase) override {
 		MyPlugin* plugin = (MyPlugin*)pluginBase;
 

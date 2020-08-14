@@ -216,15 +216,24 @@ void Juceglvst_audioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
+	
+	std::tuple<std::vector<float*>, int> data;
+	for (int channel = 0; channel < totalNumInputChannels; ++channel)
+	{
+		std::get<0>(data).push_back(buffer.getWritePointer(channel));
+		std::get<1>(data) = buffer.getNumSamples();
+	}
 
-        // ..do something to the data...
-		if (!isReloading && plugin) {
-			plugin->process(nullptr, nullptr);
-		}
+	if (!isReloading && plugin) {
+		plugin->process(&data, nullptr);
+	}
+
+	/*
+	for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    {
+        float* channelData = buffer.getWritePointer (channel);
     }
+	*/
 }
 
 //==============================================================================
