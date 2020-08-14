@@ -19,16 +19,19 @@ tree = etree.parse(path_to_project)
 
 namespaces = {'ns':'http://schemas.microsoft.com/developer/msbuild/2003'}
 
+# added include dir
 for el in tree.xpath('//ns:ClCompile/ns:AdditionalIncludeDirectories', namespaces=namespaces):
     if el.text.find(pathHotjuice) < 0:
         el.text = el.text + ";" + pathHotjuice
 
+# added predefined
 for el in tree.xpath('//ns:PreprocessorDefinitions', namespaces=namespaces):
-    if el.text.find("MURKA_OFFSCREEN") < 0:
+    if el.text.find("MURKA_OFFSCREEN;") < 0:
         el.text = 'MURKA_OFFSCREEN;' + el.text
-    if el.text.find("MURKA_OF") < 0:
+    if el.text.find("MURKA_OF;") < 0:
         el.text = 'MURKA_OF;' + el.text
 
+# change prj to dll
 for el in tree.xpath('//ns:ConfigurationType', namespaces=namespaces):
     el.text = 'DynamicLibrary'
 
@@ -46,11 +49,13 @@ def include_files(section, extension):
             if not isFound:
                 el.append(etree.XML('<' + section + ' Include="' + path + '"/>'))
 
+# add include files
 include_files('ClCompile', '.cpp')
 include_files('ClInclude', '.h')
 
 path_to_plugin = os.path.join(os.environ.get("APPDATA"), company_name, project_name)
 
+# add post build
 for el in tree.xpath('//ns:PostBuildEvent', namespaces=namespaces):
     el.find('..').append(etree.XML('<CustomBuildStep><Command>' +
     saxutils.escape('mkdir ' + '"' + path_to_plugin + '" ') +
