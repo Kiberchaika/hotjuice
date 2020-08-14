@@ -10,5 +10,5 @@ std::string _getAppDataDirectory() {
                                error:NULL];
     char path_c[PATH_MAX];
     [url getFileSystemRepresentation:path_c maxLength:sizeof(path_c)];
-    return std::string(path_c);
+    return std::string(path_c) + "/";
 }

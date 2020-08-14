@@ -34,7 +34,7 @@ std::string hotjuice::Utils::getAppDataDirectory()
 {
     std::string str = "";
 #if defined (_WIN32)
-	str = std::string(getenv("APPDATA"));
+	str = std::string(getenv("APPDATA")) + "/";
 #elif defined (__APPLE__)
     str = _getAppDataDirectory();
 #endif
