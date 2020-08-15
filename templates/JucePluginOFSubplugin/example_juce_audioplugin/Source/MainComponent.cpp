@@ -15,6 +15,8 @@ MainComponent::MainComponent()
     // Make sure you set the size of the component after
     // you add any child components.
     openGLContext.setOpenGLVersionRequired (OpenGLContext::OpenGLVersion::openGL3_2);
+    openGLContext.setMultisamplingEnabled(true);
+    
     setSize(800, 600);
 	addKeyListener(this);
 	setWantsKeyboardFocus(true);
@@ -48,12 +50,7 @@ void MainComponent::render()
 {
 	if (!processor->isReloading && processor->plugin) {
 		if (processor->needToReinitRender) {
-
 			processor->plugin->setupRenderer();
-
-			float desktopScale = openGLContext.getRenderingScale();
-			processor->plugin->setDesktopScale(desktopScale);
-
 			processor->needToReinitRender = false;
 		}
 
@@ -61,11 +58,13 @@ void MainComponent::render()
 		processor->plugin->custom("test");
 		processor->plugin->custom("test2");
 		*/
-
+        
 		// This clears the context with a black background.
 		OpenGLHelpers::clear(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 
 		float desktopScale = openGLContext.getRenderingScale();
+        //float desktopScale = Desktop::getInstance().getDisplays().findDisplayForRect (getScreenBounds()).scale;
+        processor->plugin->setDesktopScale(desktopScale);
 		processor->plugin->setWindowSize(roundToInt(desktopScale * getWidth()), roundToInt(desktopScale * getHeight()));
 
 		processor->plugin->draw();
