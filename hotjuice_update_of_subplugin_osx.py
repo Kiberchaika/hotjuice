@@ -72,15 +72,15 @@ echo $APPSUPPORT_PATH;
 
 mkdir -p "$APPSUPPORT_PATH/"
 
+cp -R "RESOURCES_SOURCE" "$APPSUPPORT_PATH/"
+
 # Copy libfmod and change install directory for fmod to run
 
 rsync -aved "$OF_PATH/libs/fmodex/lib/osx/libfmodex.dylib" "$APPSUPPORT_PATH/"
 
+install_name_tool -change @executable_path/libfmodex.dylib @loader_path/libfmodex.dylib "$TARGET_BUILD_DIR/$PRODUCT_NAME.dylib" 
+
 rsync -aved  "$TARGET_BUILD_DIR/$PRODUCT_NAME.dylib" "$APPSUPPORT_PATH/$PRODUCT_NAME.dylib"
-
-install_name_tool -change @executable_path/libfmodex.dylib @loader_path/libfmodex.dylib "$APPSUPPORT_PATH/$PRODUCT_NAME.dylib" 
-
-cp -R "RESOURCES_SOURCE" "$APPSUPPORT_PATH/"
 
 echo "$GCC_PREPROCESSOR_DEFINITIONS";
 '''
