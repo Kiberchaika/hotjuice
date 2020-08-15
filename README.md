@@ -22,8 +22,15 @@ For the OF plugin, use our generators for processing created in the OF project:
 4. Go to folder with your subplugin project and `resources` folder and call `hotjuice_update_of_subplugin_win.py YOUR_SUBPLUGIN_PROJECT_NAME`
 
 - OSX:
-1. you have to pip install mod-pbxproj to the python that's at /usr/bin/python
-2. add hotjuice to $PATH via ~/.bash_profile or otherwise
-3. call chmod +x on hotjuice_update_of_subplugin_osx.py so you may call the script
-4. generate oF project via projectGenerator, open it in XCode, change something (like build version number) and save (regenerates project, todo: try to use https://github.com/CocoaPods/Xcodeproj to regenerate it from the script instead)
-4. Go to folder with your subplugin project folder and `resources` folder and call `hotjuice_update_of_subplugin_osx.py YOUR_SUBPLUGIN_PROJECT_NAME`
+1. Install pbxproj `pip install pbxproj`
+2. `chmod +x hotjuice_update_of_subplugin_osx.py`
+3. Add this directory to PATH env (*CHANGE /path/to/hotjuice*)
+   - `echo 'export PATH=/path/to/hotjuice:$PATH' >>~/.zshrc` or
+   - `echo 'export PATH=/path/to/hotjuice:$PATH' >>~/.bash_profile`
+4. Use (OpenFrameworks ProjectGenerator)[https://openframeworks.cc/download/] to generate and create xcode project
+5. Make any change to xcode project settings (for example change the build version number)
+6. Change directory to parent directory of subplugin project and `resources` and run script (changing name of `YOUR_SUBPLUGIN_PROJECT_NAME`): 
+   - `hotjuice_update_of_subplugin_osx.py YOUR_SUBPLUGIN_PROJECT_NAME`
+
+## TODO
+- Use https://github.com/CocoaPods/Xcodeproj to regenerate it from the script instead
