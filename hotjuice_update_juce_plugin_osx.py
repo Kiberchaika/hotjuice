@@ -93,4 +93,7 @@ project.add_header_search_paths(hotjuice_path + "/src")
 
 project.save()
 
+# deleting pycache files
+os.system('find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf')
+
 print(f"{bcolors.OKBLUE}successfully updated JUCE project {sys.argv[1]} to work with hotjuice!{bcolors.ENDC}")

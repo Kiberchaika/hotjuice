@@ -159,7 +159,10 @@ project.save()
 appsupport_path = "~/Library/Application\ Support/" + company_name + "/" + bundle_id
 print(appsupport_path)
 
+# creating symlink to final build folder
 os.system("ln -s " + appsupport_path + " Final_path")
+
+# deleting pycache files
 os.system('find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf')
 
 print(f"{bcolors.OKBLUE}successfully updated oF project {sys.argv[1]} to work with hotjuice!{bcolors.ENDC}")
