@@ -95,7 +95,7 @@ bool hotjuice::PluginManager::tryToLoad(std::string pathLib) {
     if(useHotReloading) {
         Utils::Execute("install_name_tool -id /" + Utils::getFileBaseName(pathToLibrary) + (nameTempDir != "" ? "." + nameTempDir : "") + "." + Utils::getFileExtension(pathLib) + " \"" + pathLib + "\"");
     }
-    instanceLib = dlopen(pathLib.c_str(), RTLD_LAZY);
+    instanceLib = dlopen(pathLib.c_str(), RTLD_LOCAL);
 #endif
 
 
