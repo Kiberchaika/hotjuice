@@ -8,14 +8,23 @@ print("python path:", sys.executable)
 from pbxproj import XcodeProject
 from pbxproj import PBXShellScriptBuildPhase
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 # loading project settings
 sys.path.append(os.getcwd())
 try:
     from project_settings import *
 except :
-    print("project.settings.py not found in ", os.getcwd())
-    print("please create project_settings.py with project settings as in the template")
+    print(f"{bcolors.FAIL}project.settings.py not found in ", os.getcwd(), f"{bcolors.ENDC}")
+    print(f"{bcolors.FAIL}please create project_settings.py with project settings as in the template{bcolors.ENDC}")
     quit()
 
 
@@ -24,7 +33,7 @@ print("__file__:", __file__)
 hotjuice_path = os.path.dirname(os.path.realpath(__file__))
 print("hotjuice path:", os.path.dirname(os.path.realpath(__file__)))
 if len(sys.argv) < 2:
-    print ("please provide the name of oF plugin folder to update as the argument to this script")
+    print (f"{bcolors.FAIL}please provide the name of oF plugin folder to update as the argument to this script{bcolors.ENDC}")
     quit()
 else:
     print("argument 1:", sys.argv[1])
@@ -103,13 +112,16 @@ for target in project.objects.get_targets(None):
             if not foundScript:
                 build_phase.shellScript = finalscript
                 foundScript = True
-                print("replaced the script with the correct one")
+                print("Replaced the bad script with the correct script.")
             else:
                 # remove this script
                 project.remove_run_script(build_phase.shellScript)
-                print("removed extra script")
+                print("Removed extra script.")
         else:
             print(thisscript.strip()[:10], " does not begin with ", 'COMPANY'.strip())
+            if thisscript.strip().startswith("mkdir -p "):
+                project.remove_run_script(build_phase.shellScript)
+                print("Removed extra oF app resources script.")
         # if (build_phase.shellScript.startswith("COMPANY_NAME")) or (build_phase.shellScript.startswith('mkdir -p "$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/"')):
         #     print("found the script!")
         #     print(build_phase.shellScript)
@@ -144,4 +156,11 @@ project.set_flags('PRODUCT_BUNDLE_IDENTIFIER',bundle_id)
 
 project.save()
 
+appsupport_path = "~/Library/Application\ Support/" + company_name + "/" + bundle_id
+print(appsupport_path)
+
+os.system("ln -s " + appsupport_path + " Final_path")
+os.system('find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf')
+
+print(f"{bcolors.OKBLUE}successfully updated oF project {sys.argv[1]} to work with hotjuice!{bcolors.ENDC}")
 # project.remove_run_script()
