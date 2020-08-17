@@ -42,12 +42,53 @@ code \
 }(), 0);
 
 namespace hotjuice {
+    class PluginParameter {
+    public:
+        // parameter base class
+        std::type_index type_index = std::type_index(typeid(NULL));
+        std::string name = "";
+        
+        PluginParameter(){};
+    };
+
+    template<typename TYPE>
+    class PluginParameterOfType: public PluginParameter {
+    public:
+        std::function<TYPE()> getValue;
+
+        std::function<void(TYPE)> setValue;
+        
+        PluginParameterOfType(std::string parameterName,
+                              std::function<TYPE()> getter,
+                              std::function<void(TYPE)> setter) {
+            type_index = std::type_index(typeid(TYPE));
+            name = parameterName;
+            getValue = getter;
+            setValue = setter;
+        }
+        
+        #if defined(JUCE_APP_VERSION)
+        
+        PluginParameterOfType(juce::AudioParameterFloat* parameter) {
+            name = parameter->name.toStdString();
+            type_index = std::type_index(typeid(float));
+            getValue = [&]()->float{ return parameter->get(); };
+            setValue = [&](float v){ parameter->setValueNotifyingHost(v); };
+        }
+        
+        #endif
+
+    };
+
+
 	class PluginBase {
 	private:
 		bool reloaded;
 
 	public:
 		typedef void(PluginBase::*CustomFunc)(void*, void*);
+        
+        std::vector<PluginParameter*> pluginParameters;
 
 		PluginBase();
 		virtual ~PluginBase();

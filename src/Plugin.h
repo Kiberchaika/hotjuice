@@ -3,18 +3,22 @@
 #include "PluginBase.h"
 
 namespace hotjuice {
+
 	class Plugin {
 		PluginBase* plugin;
 		std::vector<Plugin*>* plugins;
 		std::string namePlugin;
 
 		friend class PluginManager;
-
+        
+        
 	public:
 		Plugin(PluginBase* plugin, std::vector<Plugin*>* plugins, std::string namePlugin);
 		~Plugin();
 
-		PluginBase* getPtrPlugin();
+        void addParameter(PluginParameter* parameter);
+
+        PluginBase* getPtrPlugin();
 		const char* getNamePlugin();
 
 		void setReloaded();
