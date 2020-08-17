@@ -37,7 +37,7 @@ Juceglvst_audioProcessor::Juceglvst_audioProcessor()
 #if defined (_WIN32)
 	std::string pluginPath = "MyCompany/Hotjuice oF and JUCE example";
 	std::string pluginEnclosingFolder = juce::File::getSpecialLocation(juce::File::SpecialLocationType::userApplicationDataDirectory).getChildFile(pluginPath).getFullPathName().toStdString();
-	hotreloader->setAdditionalFilesToCopy({ "fmodex64.dll","fmodexL64.dll" });
+	hotreloader->setAdditionalFilesToCopy({ "FreeImage.dll", "fmodex64.dll","fmodexL64.dll" });
 	hotreloader->setupWithHotReloading(pluginEnclosingFolder, pluginFilename, pluginEnclosingFolder + "/tempPlugins");
 #elif defined (__APPLE__)
 	std::string pluginPath = "MyCompany/com.company.application";
