@@ -68,12 +68,20 @@ namespace hotjuice {
         }
         
         #if defined(JUCE_APP_VERSION)
+
+        juce::RangedAudioParameter* parameterPointer;
         
+
         PluginParameterOfType(juce::AudioParameterFloat* parameter) {
             name = parameter->name.toStdString();
+            parameterPointer = parameter;
             type_index = std::type_index(typeid(float));
-            getValue = [&]()->float{ return parameter->get(); };
-            setValue = [&](float v){ parameter->setValueNotifyingHost(v); };
+            getValue = [&]()->float{
+                return ((juce::AudioParameterFloat*)parameterPointer)->get();
+                
+            };
+            setValue = [&](float v){ ((juce::AudioParameterFloat*)parameterPointer)->setValueNotifyingHost(v);
+            };
         }
         
         #endif
@@ -89,6 +97,15 @@ namespace hotjuice {
 		typedef void(PluginBase::*CustomFunc)(void*, void*);
         
         std::vector<PluginParameter*> pluginParameters;
+        
+        template<typename TYPE>
+        PluginParameterOfType<TYPE>* getParameter(std::string name)
+        {
+            for (auto &parameter: pluginParameters) {
+                if (parameter->name == name) return (hotjuice::PluginParameterOfType<TYPE>*)parameter;
+            }
+            return nullptr;
+        }
 
 		PluginBase();
 		virtual ~PluginBase();
