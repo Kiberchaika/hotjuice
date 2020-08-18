@@ -16,7 +16,11 @@ MainComponent::MainComponent()
     // you add any child components.
     openGLContext.setOpenGLVersionRequired (OpenGLContext::OpenGLVersion::openGL3_2);
     openGLContext.setMultisamplingEnabled(true);
-    
+	
+	OpenGLPixelFormat pixelFormat;
+	pixelFormat.multisamplingLevel = 8;
+	openGLContext.setPixelFormat(pixelFormat);
+
     setSize(800, 600);
 	addKeyListener(this);
 	setWantsKeyboardFocus(true);

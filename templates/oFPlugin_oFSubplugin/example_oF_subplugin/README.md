@@ -1,0 +1,1 @@
+Use subplugin from `JucePlugin_oFSubplugin\example_oF_subplugin`

@@ -144,14 +144,14 @@ namespace hotjuice {
 };
 
 #if defined(_WIN32)
-#define HOTRELOADER_API __declspec(dllexport)
+#define HOTJUICE_API __declspec(dllexport)
 #else
-#define HOTRELOADER_API
+#define HOTJUICE_API
 #endif
 
 extern "C" {
-	//HOTRELOADER_API void initGL(void* ptr);
-	//HOTRELOADER_API void* getGL();
-	//HOTRELOADER_API void deinitGL();
-	HOTRELOADER_API void* createPlugin(const char* name);
+	//HOTJUICE_API void initGL(void* ptr);
+	//HOTJUICE_API void* getGL();
+	//HOTJUICE_API void deinitGL();
+	HOTJUICE_API void* createPlugin(const char* name);
 }

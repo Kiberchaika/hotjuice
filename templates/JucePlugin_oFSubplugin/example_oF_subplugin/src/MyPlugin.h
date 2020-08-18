@@ -29,7 +29,7 @@ class MyPlugin : public ofxPluginWithRender {
 	};
 
 	Murka m;
-	MurImage img;
+	MurImage logo;
 	ofImage img2;
 
 	float a = 0;
@@ -38,6 +38,8 @@ class MyPlugin : public ofxPluginWithRender {
 	bool isCloned = false;
 	std::string pathToResources;
 
+	float lastUIScale = 1.0;
+ 
 public:
 	MyPlugin() {
 #if defined (_WIN32)
@@ -62,17 +64,26 @@ public:
 
 	void setupRenderer(void* in, void* out) override {
 		ofxPluginWithRender::setupRenderer();
-
+        
+        lastUIScale = getDesktopScale();
 
 		m.setWindow((ofAppBaseWindow*)(&window));
 		m.setRenderer((ofBaseGLRenderer*)(window.renderer().get()));
-		m.setupFonts(
-			pathToResources + "Roboto-Regular.ttf", 12,
-			pathToResources + "Roboto-Regular.ttf", 20,
-			pathToResources + "Roboto-Regular.ttf", 12,
-			true
-		);
+
+		//logo.clear();
+		//logo.load(pathToResources + "logo.png");
+
+		reloadFonts();
 	}
+    
+    void reloadFonts() {
+        m.setupFonts(
+            pathToResources + "Roboto-Regular.ttf", 12 * lastUIScale,
+            pathToResources + "Roboto-Regular.ttf", 20 * lastUIScale,
+            pathToResources + "Roboto-Regular.ttf", 12 * lastUIScale,
+            true
+        );
+    }
 
 
 	void setup(void* in, void* out) override {
@@ -87,6 +98,11 @@ public:
 
 	int cc = 0;
 	void draw(void* in, void* out) override {
+        if (getDesktopScale() != lastUIScale) {
+            lastUIScale = getDesktopScale();
+            reloadFonts();
+        }
+        
 		ofBaseRenderer& renderer = *(window.renderer());
 		renderer.startRender();
 
@@ -208,10 +224,11 @@ public:
 	float phase = 0;
 
 	void process(void* in, void* out) override {
-		std::tuple<std::vector<float*>, int>& data = *(std::tuple<std::vector<float*>, int> *)in;
+		std::tuple<std::vector<float*>, int, double>& data = *(std::tuple<std::vector<float*>, int, double> *)in;
 
 		std::vector<float*> buffers = std::get<0>(data);
 		int samples = std::get<1>(data);
+		double sampleRate = std::get<2>(data);
 
 		while (phase > TWO_PI) {
 			phase -= TWO_PI;

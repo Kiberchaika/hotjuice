@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="QvMuYT" name="example_juce_audioplugin" projectType="audioplug"
-              jucerVersion="5.4.5" pluginFormats="buildVST3" pluginManufacturer="example_juce_audioplugin"
-              headerPath="D:\Developer\Kiberchaika\hotjuice\src">
+              jucerVersion="5.4.5" pluginFormats="buildVST3" pluginManufacturer="example_juce_audioplugin">
   <MAINGROUP id="YhGEjL" name="example_juce_audioplugin">
     <GROUP id="{5A51FE8A-D9F6-28EE-2A56-BD53B224D9ED}" name="Source">
-      <FILE id="QUedAU" name="PluginBase.h" compile="0" resource="0" file="../../../../../../../Kiberchaika/hotjuice/src/PluginBase.h"/>
-      <FILE id="P0rmBT" name="PluginManager.cpp" compile="1" resource="0"
-            file="../../../../../../../Kiberchaika/hotjuice/src/PluginManager.cpp"/>
-      <FILE id="Wsiyab" name="PluginManager.h" compile="0" resource="0" file="../../../../../../../Kiberchaika/hotjuice/src/PluginManager.h"/>
-      <FILE id="fT5UlO" name="Utils.cpp" compile="1" resource="0" file="../../../../../../../Kiberchaika/hotjuice/src/Utils.cpp"/>
-      <FILE id="uJKCGq" name="Utils.h" compile="0" resource="0" file="../../../../../../../Kiberchaika/hotjuice/src/Utils.h"/>
-      <FILE id="khdNkH" name="Plugin.cpp" compile="1" resource="0" file="../../../../../../../Kiberchaika/hotjuice/src/Plugin.cpp"/>
-      <FILE id="Nfh2GG" name="Plugin.h" compile="0" resource="0" file="../../../../../../../Kiberchaika/hotjuice/src/Plugin.h"/>
-      <FILE id="iHx7EC" name="PluginBase.cpp" compile="1" resource="0" file="../../../../../../../Kiberchaika/hotjuice/src/PluginBase.cpp"/>
       <FILE id="QcpO2C" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
       <FILE id="D7Fv8l" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>

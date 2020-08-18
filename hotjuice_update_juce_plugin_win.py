@@ -49,5 +49,4 @@ for subdir, dirs, files in os.walk(os.path.join(pathWorkingDir, sys.argv[1])):
             include_files('ClCompile', '.cpp')
             include_files('ClInclude', '.h')
 
-            # tree.write('example_oF_subplugin.vcxproj')
             tree.write(path_to_project)

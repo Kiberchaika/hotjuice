@@ -29,7 +29,7 @@ Juceglvst_audioProcessor::Juceglvst_audioProcessor()
 {
     
     // Initialise GL objects for rendering here.
-    hotreloader = new hotjuice::PluginManager();
+    pluginManager = new hotjuice::PluginManager();
     
 	// The library file that we load here should be called like this:
 	std::string pluginFilename = "example_oF_subplugin"; // omit the .dylib or .dll and "lib" in the beginning
@@ -37,20 +37,20 @@ Juceglvst_audioProcessor::Juceglvst_audioProcessor()
 #if defined (_WIN32)
 	std::string pluginPath = "MyCompany/Hotjuice oF and JUCE example";
 	std::string pluginEnclosingFolder = juce::File::getSpecialLocation(juce::File::SpecialLocationType::userApplicationDataDirectory).getChildFile(pluginPath).getFullPathName().toStdString();
-	hotreloader->setAdditionalFilesToCopy({ "FreeImage.dll", "fmodex64.dll","fmodexL64.dll" });
-	hotreloader->setupWithHotReloading(pluginEnclosingFolder, pluginFilename, pluginEnclosingFolder + "/tempPlugins");
+	pluginManager->setAdditionalFilesToCopy({ "FreeImage.dll", "fmodex64.dll","fmodexL64.dll" });
+	pluginManager->setupWithHotReloading(pluginEnclosingFolder, pluginFilename, pluginEnclosingFolder + "/tempPlugins");
 #elif defined (__APPLE__)
 	std::string pluginPath = "MyCompany/com.company.application";
 	std::string pluginEnclosingFolder = juce::File::getSpecialLocation(juce::File::SpecialLocationType::userApplicationDataDirectory).getChildFile("Application Support").getChildFile(pluginPath).getFullPathName().toStdString();
-	hotreloader->setAdditionalFilesToCopy({ "libfmodex.dylib" });
-	hotreloader->setupWithHotReloading(pluginEnclosingFolder, pluginFilename, pluginEnclosingFolder + "/tempPlugins");
+	pluginManager->setAdditionalFilesToCopy({ "libfmodex.dylib" });
+	pluginManager->setupWithHotReloading(pluginEnclosingFolder, pluginFilename, pluginEnclosingFolder + "/tempPlugins");
 #endif
     
 	isReloading = false;
 
     //plugin = nullptr;
 
-	hotreloader->addCallbackBeforeLoad(
+	pluginManager->addCallbackBeforeLoad(
 		[&]() -> void {
 		std::cout << "callback" << std::endl;
 
@@ -60,7 +60,7 @@ Juceglvst_audioProcessor::Juceglvst_audioProcessor()
 	}
 	);
 
-	hotreloader->addCallbackAfterLoad(
+	pluginManager->addCallbackAfterLoad(
 		[&]() -> void {
 		std::cout << "callback" << std::endl;
 
@@ -72,14 +72,14 @@ Juceglvst_audioProcessor::Juceglvst_audioProcessor()
 	}
 	);
 
-	plugin = hotreloader->createPluginObject("MyPlugin");
+	plugin = pluginManager->createPluginObject("MyPlugin");
 
 	startTimer(100);
 }
 
 void Juceglvst_audioProcessor::timerCallback()
 {
-	hotreloader->tryToLoadIfUpdated();
+	pluginManager->tryToLoadIfUpdated();
 
 	if (!isReloading && plugin) {
 		float in[2] = { 0, 0 };
@@ -96,9 +96,9 @@ Juceglvst_audioProcessor::~Juceglvst_audioProcessor()
         plugin = nullptr;
     }
     
-    if (hotreloader) {
-        delete hotreloader;
-        hotreloader = nullptr;
+    if (pluginManager) {
+        delete pluginManager;
+        pluginManager = nullptr;
     }
 }
 
@@ -225,11 +225,11 @@ void Juceglvst_audioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
 	
-	std::tuple<std::vector<float*>, int> data;
-	for (int channel = 0; channel < totalNumInputChannels; ++channel)
-	{
+	std::tuple<std::vector<float*>, int, double> data;
+	for (int channel = 0; channel < totalNumInputChannels; ++channel) {
 		std::get<0>(data).push_back(buffer.getWritePointer(channel));
 		std::get<1>(data) = buffer.getNumSamples();
+		std::get<2>(data) = getSampleRate();
 	}
 
 	if (!isReloading && plugin) {

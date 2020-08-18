@@ -20,7 +20,7 @@
 class Juceglvst_audioProcessor  : public AudioProcessor, public Timer 
 {
 public:
-	hotjuice::PluginManager* hotreloader;
+	hotjuice::PluginManager* pluginManager;
 	hotjuice::Plugin* plugin;
 
 	bool needToReinitRender;
