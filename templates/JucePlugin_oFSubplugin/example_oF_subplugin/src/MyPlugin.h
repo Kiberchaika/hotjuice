@@ -227,6 +227,7 @@ public:
 		std::tuple<std::vector<float*>, int, double>& data = *(std::tuple<std::vector<float*>, int, double> *)in;
 
 		std::vector<float*> buffers = std::get<0>(data);
+		int channels = buffers.size();
 		int samples = std::get<1>(data);
 		double sampleRate = std::get<2>(data);
 
