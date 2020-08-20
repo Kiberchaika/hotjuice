@@ -134,6 +134,8 @@ namespace hotjuice {
 		virtual void keyReleased(int key);
 
 		virtual void custom(char* name = nullptr, void* in = nullptr, void* out = nullptr);
+		virtual void addCallback(char* name, std::function<void(void*, void*)> callback);
+		virtual void callback(char* name = nullptr, void* in = nullptr, void* out = nullptr);
 		virtual void clone(PluginBase* obj);
 	};
 

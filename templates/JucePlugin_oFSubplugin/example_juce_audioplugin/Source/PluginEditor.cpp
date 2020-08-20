@@ -19,13 +19,11 @@ Juceglvst_audioProcessorEditor::Juceglvst_audioProcessorEditor (Juceglvst_audioP
     // editor's size to whatever you need it to be.
     setSize (800, 600);
     
-    mainComponent = new MainComponent();
-    mainComponent->setSize(getWidth(), getHeight());
-    mainComponent->processor = &p;
+    hotJuiceComponent = new HotJuiceComponent();
+    hotJuiceComponent->setSize(getWidth(), getHeight());
+    hotJuiceComponent->processor = &p;
 
-    addAndMakeVisible(mainComponent);
-    
-   
+    addAndMakeVisible(hotJuiceComponent);
 }
 
 Juceglvst_audioProcessorEditor::~Juceglvst_audioProcessorEditor()
@@ -37,16 +35,6 @@ Juceglvst_audioProcessorEditor::~Juceglvst_audioProcessorEditor()
 //==============================================================================
 void Juceglvst_audioProcessorEditor::paint (Graphics& g)
 {
-    
-    
-    
-    
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-   // g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-
-   // g.setColour (Colours::white);
-  //  g.setFont (15.0f);
-   // g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
 }
 
 void Juceglvst_audioProcessorEditor::resized()

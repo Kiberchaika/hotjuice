@@ -6,11 +6,43 @@
  ==============================================================================
  */
 
-#include "MainComponent.h"
+#include "HotJuiceComponent.h"
 
+enum ofKey {
+	OF_KEY_SHIFT = 0x1,
+	OF_KEY_CONTROL = 0x2,
+	OF_KEY_ALT = 0x4,
+	OF_KEY_SUPER = 0x10,
+	OF_KEY_COMMAND = OF_KEY_SUPER,
+
+	OF_KEY_BACKSPACE = 8,
+	OF_KEY_DEL = 127,
+
+	OF_KEY_F1 = 0xe000,
+	OF_KEY_F2 = 0xe001,
+	OF_KEY_F3 = 0xe002,
+	OF_KEY_F4 = 0xe003,
+	OF_KEY_F5 = 0xe004,
+	OF_KEY_F6 = 0xe005,
+	OF_KEY_F7 = 0xe006,
+	OF_KEY_F8 = 0xe007,
+	OF_KEY_F9 = 0xe008,
+	OF_KEY_F10 = 0xe009,
+	OF_KEY_F11 = 0xe00A,
+	OF_KEY_F12 = 0xe00B,
+	OF_KEY_LEFT = 0xe00C,
+	OF_KEY_UP = 0xe00D,
+	OF_KEY_RIGHT = 0xe00E,
+	OF_KEY_DOWN = 0xe00F,
+	OF_KEY_PAGE_UP = 0xe010,
+	OF_KEY_PAGE_DOWN = 0xe011,
+	OF_KEY_HOME = 0xe012,
+	OF_KEY_END = 0xe013,
+	OF_KEY_INSERT = 0xe014,
+};
 
 //==============================================================================
-MainComponent::MainComponent()
+HotJuiceComponent::HotJuiceComponent()
 {
     // Make sure you set the size of the component after
     // you add any child components.
@@ -29,10 +61,11 @@ MainComponent::MainComponent()
 	keyPressedCommand = false;
 	keyPressedCtrl = false;
 	keyPressedShift = false;
-	
+
+	lastFrameTime = std::chrono::high_resolution_clock::now();
 }
 
-MainComponent::~MainComponent()
+HotJuiceComponent::~HotJuiceComponent()
 {
     // This shuts down the GL system and stops the rendering calls.
     shutdownOpenGL();
@@ -40,21 +73,31 @@ MainComponent::~MainComponent()
 
 
 //==============================================================================
-void MainComponent::initialise()
+void HotJuiceComponent::initialise()
 {
 	processor->needToReinitRender = true;
 }
 
-void MainComponent::shutdown()
+void HotJuiceComponent::shutdown()
 {
     // Free any GL objects created for rendering here.
 }
 
-void MainComponent::render()
+void HotJuiceComponent::render()
 {
+	// limit fps
+	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - lastFrameTime) < std::chrono::milliseconds{ 1000 / 60 }) return;
+	lastFrameTime = std::chrono::high_resolution_clock::now();
+
 	if (!processor->isReloading && processor->plugin) {
 		if (processor->needToReinitRender) {
 			processor->plugin->setupRenderer();
+			processor->plugin->addCallback("hideCursor", [&](void* in, void* out) {
+				setMouseCursor(MouseCursor::NoCursor);
+			});
+			processor->plugin->addCallback("showCursor", [&](void* in, void* out) {
+				setMouseCursor(MouseCursor::NormalCursor);
+			});
 			processor->needToReinitRender = false;
 		}
 
@@ -76,36 +119,36 @@ void MainComponent::render()
 
 }
 
-void MainComponent::mouseDrag(const MouseEvent & event)
+void HotJuiceComponent::mouseDrag(const MouseEvent & event)
 {
-    if (processor->plugin) {
+    if (!processor->isReloading && processor->plugin) {
         float desktopScale = openGLContext.getRenderingScale();
         processor->plugin->mouseDragged(event.x * desktopScale, event.y * desktopScale, 0);
     }
 }
 
-void MainComponent::mouseMove(const MouseEvent& event) {
-    if (processor->plugin) {
+void HotJuiceComponent::mouseMove(const MouseEvent& event) {
+    if (!processor->isReloading && processor->plugin) {
         float desktopScale = openGLContext.getRenderingScale();
         processor->plugin->mouseMoved(event.x * desktopScale, event.y * desktopScale);
     }
 }
 
-void MainComponent::mouseDown(const MouseEvent& event) {
-    if (processor->plugin) {
+void HotJuiceComponent::mouseDown(const MouseEvent& event) {
+    if (!processor->isReloading && processor->plugin) {
         float desktopScale = openGLContext.getRenderingScale();
         processor->plugin->mousePressed(event.x * desktopScale, event.y * desktopScale, 0);
     }
 }
 
-void MainComponent::mouseUp(const MouseEvent& event) {
-    if (processor->plugin) {
+void HotJuiceComponent::mouseUp(const MouseEvent& event) {
+    if (!processor->isReloading && processor->plugin) {
         float desktopScale = openGLContext.getRenderingScale();
         processor->plugin->mouseReleased(event.x * desktopScale, event.y * desktopScale, 0);
     }
 }
 
-int MainComponent::convertKey(int key) {
+int HotJuiceComponent::convertKey(int key) {
     if (key == KeyPress::F1Key) return ofKey::OF_KEY_F1;
     if (key == KeyPress::F2Key) return ofKey::OF_KEY_F2;
     if (key == KeyPress::F3Key) return ofKey::OF_KEY_F3;
@@ -129,7 +172,7 @@ int MainComponent::convertKey(int key) {
     return -1;
 }
 
-bool MainComponent::keyPressed(const KeyPress & key, Component * originatingComponent)
+bool HotJuiceComponent::keyPressed(const KeyPress & key, Component * originatingComponent)
 {
     ///*
     if (key.getModifiers().isAltDown() != keyPressedAlt) {
@@ -183,7 +226,7 @@ bool MainComponent::keyPressed(const KeyPress & key, Component * originatingComp
     return true;
 }
 
-bool MainComponent::keyStateChanged(bool isKeyDown, juce::Component * originatingComponent) {
+bool HotJuiceComponent::keyStateChanged(bool isKeyDown, juce::Component * originatingComponent) {
     for (auto iter = keysPressed.begin(); iter != keysPressed.end(); ++iter) {
         auto keyCode = iter->first;
         auto textCharacter = iter->second;
@@ -199,28 +242,28 @@ bool MainComponent::keyStateChanged(bool isKeyDown, juce::Component * originatin
     return true;
 }
 
-void MainComponent::sendPluginKeyPressed(int keyCode) {
-    if (processor->plugin) {
+void HotJuiceComponent::sendPluginKeyPressed(int keyCode) {
+    if (!processor->isReloading && processor->plugin) {
         processor->plugin->keyPressed(keyCode);
     }
 }
 
-void MainComponent::sendPluginKeyReleased(int keyCode) {
-    if (processor->plugin) {
+void HotJuiceComponent::sendPluginKeyReleased(int keyCode) {
+    if (!processor->isReloading && processor->plugin) {
         processor->plugin->keyReleased(keyCode);
     }
 }
 
 //==============================================================================
-void MainComponent::paint(Graphics& g)
+void HotJuiceComponent::paint(Graphics& g)
 {
     // You can add your component specific drawing code here!
     // This will draw over the top of the openGL background.
 }
 
-void MainComponent::resized()
+void HotJuiceComponent::resized()
 {
-    // This is called when the MainComponent is resized.
+    // This is called when the HotJuiceComponent is resized.
     // If you add any child components, this is where you should
     // update their positions.
 }

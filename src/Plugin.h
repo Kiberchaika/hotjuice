@@ -5,7 +5,7 @@
 namespace hotjuice {
 
 	class Plugin {
-		PluginBase* plugin;
+		PluginBase* pluginBase;
 		std::vector<Plugin*>* plugins;
 		std::string namePlugin;
 
@@ -13,7 +13,7 @@ namespace hotjuice {
         
         
 	public:
-		Plugin(PluginBase* plugin, std::vector<Plugin*>* plugins, std::string namePlugin);
+		Plugin(PluginBase* pluginBase, std::vector<Plugin*>* plugins, std::string namePlugin);
 		~Plugin();
 
         void addParameter(PluginParameter* parameter);
@@ -43,6 +43,8 @@ namespace hotjuice {
 		void keyReleased(int key);
 
 		void custom(char* name, void* in = nullptr, void* out = nullptr);
+		void addCallback(char*, std::function<void(void*, void*)> callback);
+
 		void clone(PluginBase* obj);
 	};
 };

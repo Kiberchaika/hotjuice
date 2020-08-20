@@ -133,12 +133,12 @@ bool hotjuice::PluginManager::tryToLoad(std::string pathLib) {
 		for (size_t i = 0; i < plugins.size(); i++) {
 			PluginBase* ptr = (PluginBase*)(funcCreatePlugin)((char*)plugins[i]->namePlugin.c_str());
 			ptr->setReloaded();
-			ptr->clone(plugins[i]->plugin);
+			ptr->clone(plugins[i]->pluginBase);
             
-            ptr->pluginParameters = plugins[i]->plugin->pluginParameters;
+            ptr->pluginParameters = plugins[i]->pluginBase->pluginParameters;
 
-			delete plugins[i]->plugin;
-			plugins[i]->plugin = ptr;
+			delete plugins[i]->pluginBase;
+			plugins[i]->pluginBase = ptr;
 		} 
 
 		// callback after

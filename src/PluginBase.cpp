@@ -11,6 +11,11 @@ std::map<std::pair<std::type_index, std::string>, hotjuice::PluginBase::CustomFu
 	return mapOfCustomFunctions;
 }
 
+std::map<std::pair<std::type_index, std::string>, std::function<void(void*, void*)>>& getMapOfCallbacks() {
+	static std::map<std::pair<std::type_index, std::string>, std::function<void(void*, void*)>> mapOfCallbacks;
+	return mapOfCallbacks;
+}
+
 void hotjuice::PluginUtils::addConstrutor(std::string name, std::function<void*()> function)
 {
 	getMapOfConstrutors()[name] = function;
@@ -87,9 +92,18 @@ void hotjuice::PluginBase::custom(char * name, void * in, void * out) {
 	}
 }
 
-void hotjuice::PluginBase::clone(PluginBase * obj) {
+void hotjuice::PluginBase::addCallback(char* name, std::function<void(void*, void*)> callback) {
+	getMapOfCallbacks()[std::make_pair<std::type_index, std::string>(typeid(*this), name)] = callback;
 }
 
+void hotjuice::PluginBase::callback(char * name, void * in, void * out) {
+	if (name != nullptr && getMapOfCallbacks().find(std::make_pair<std::type_index, std::string>(typeid(*this), name)) != getMapOfCallbacks().end()) {
+		getMapOfCallbacks()[std::make_pair<std::type_index, std::string>(typeid(*this), name)](in, out);
+	}
+}
+
+void hotjuice::PluginBase::clone(PluginBase * obj) {
+}
 
 void* createPlugin(const char* name)
 { 
