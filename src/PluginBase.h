@@ -92,6 +92,7 @@ namespace hotjuice {
 	class PluginBase {
 	private:
 		bool reloaded;
+		std::map<std::string, std::function<void(void*, void*)>> mapOfCallbacks;
 
 	public:
 		typedef void(PluginBase::*CustomFunc)(void*, void*);
