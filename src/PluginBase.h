@@ -19,7 +19,7 @@
 #else
 #endif
 
-#define PLUGIN_ADD_FUNCTION(className, funcName) hotjuice::PluginUtils::addCustomFunction(typeid(className), #funcName, (hotjuice::PluginBase::CustomFunc)&className::funcName)
+#define PLUGIN_ADD_FUNCTION(className, funcName) addCustomFunction(#funcName, (hotjuice::PluginBase::CustomFunc)&className::funcName)
 
 #define PLUGIN_ADD_CONSTRUCTOR(className) \
 	hotjuice::PluginUtils::addConstrutor(#className, []() { \
@@ -30,14 +30,6 @@
 static int _loader_##className = ([]() { \
  \
 PLUGIN_ADD_CONSTRUCTOR(className) \
- \
-}(), 0);
-
-#define PLUGIN_LOADER_WITH_FUNCTIONS(className, code) \
-static int _loader_##className = ([]() { \
- \
-PLUGIN_ADD_CONSTRUCTOR(className) \
-code \
  \
 }(), 0);
 
@@ -90,12 +82,16 @@ namespace hotjuice {
 
 
 	class PluginBase {
-	private:
-		bool reloaded;
-		std::map<std::string, std::function<void(void*, void*)>> mapOfCallbacks;
-
 	public:
 		typedef void(PluginBase::*CustomFunc)(void*, void*);
+
+	private:
+
+		bool reloaded;
+		std::map<std::string, std::function<void(void*, void*)>> mapOfCallbacks;
+		std::map<std::string, hotjuice::PluginBase::CustomFunc> mapOfCustomFunctions;
+
+	public:
         
         std::vector<PluginParameter*> pluginParameters;
         
@@ -134,15 +130,17 @@ namespace hotjuice {
 		virtual void keyPressed(int key);
 		virtual void keyReleased(int key);
 
-		virtual void custom(char* name = nullptr, void* in = nullptr, void* out = nullptr);
-		virtual void addCallback(char* name, std::function<void(void*, void*)> callback);
-		virtual void callback(char* name = nullptr, void* in = nullptr, void* out = nullptr);
 		virtual void clone(PluginBase* obj);
+
+		void custom(char* name = nullptr, void* in = nullptr, void* out = nullptr);
+		void callback(char* name = nullptr, void* in = nullptr, void* out = nullptr);
+
+		void addCallback(char* name, std::function<void(void*, void*)> callback);
+		void addCustomFunction(std::string name, PluginBase::CustomFunc func);
 	};
 
 	namespace PluginUtils {
 		void addConstrutor(std::string name, std::function<void*()> function);
-		void addCustomFunction(const std::type_info& type, char* name, PluginBase::CustomFunc func);
 	};
 };
 

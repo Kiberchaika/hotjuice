@@ -6,18 +6,9 @@ std::map<std::string, std::function<void*()>>& getMapOfConstrutors()
 	return mapOfConstrutors;
 }
 
-std::map<std::pair<std::type_index, std::string>, hotjuice::PluginBase::CustomFunc>& getMapOfCustomFunctions() {
-	static std::map<std::pair<std::type_index, std::string>, hotjuice::PluginBase::CustomFunc> mapOfCustomFunctions;
-	return mapOfCustomFunctions;
-}
-
 void hotjuice::PluginUtils::addConstrutor(std::string name, std::function<void*()> function)
 {
 	getMapOfConstrutors()[name] = function;
-}
-
-void hotjuice::PluginUtils::addCustomFunction(const std::type_info& type, char* name, hotjuice::PluginBase::CustomFunc func) {
-	getMapOfCustomFunctions()[std::make_pair<std::type_index, std::string>(type, name)] = func;
 }
 
 hotjuice::PluginBase::PluginBase() {
@@ -81,14 +72,18 @@ void hotjuice::PluginBase::keyPressed(int key) {
 void hotjuice::PluginBase::keyReleased(int key) {
 }
 
-void hotjuice::PluginBase::custom(char * name, void * in, void * out) {
-	if (name != nullptr && getMapOfCustomFunctions().find(std::make_pair<std::type_index, std::string>(typeid(*this), name)) != getMapOfCustomFunctions().end()) {
-		(this->*getMapOfCustomFunctions()[std::make_pair<std::type_index, std::string>(typeid(*this), name)])(in, out);
-	}
+void hotjuice::PluginBase::addCustomFunction(std::string name, hotjuice::PluginBase::CustomFunc func) {
+	mapOfCustomFunctions[name] = func;
 }
 
 void hotjuice::PluginBase::addCallback(char* name, std::function<void(void*, void*)> callback) {
 	mapOfCallbacks[name] = callback;
+}
+
+void hotjuice::PluginBase::custom(char * name, void * in, void * out) {
+	if (name != nullptr && mapOfCustomFunctions.find(name) != mapOfCustomFunctions.end()) {
+		(this->*mapOfCustomFunctions[name])(in, out);
+	}
 }
 
 void hotjuice::PluginBase::callback(char * name, void * in, void * out) {
@@ -112,7 +107,7 @@ void* createPlugin(const char* name)
 }
  
 // lib entry point
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(JUCE_APP_VERSION)
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
 	switch (ul_reason_for_call)
@@ -125,7 +120,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 	}
 	return TRUE;
 }
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) && !defined(JUCE_APP_VERSION)
 __attribute__((constructor)) void DllMain()
 {
 }
