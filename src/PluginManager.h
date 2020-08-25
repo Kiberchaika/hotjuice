@@ -56,6 +56,6 @@ namespace hotjuice {
 		void addCallbackAfterLoad(CallbackLoad callbackAfterLoad);
 
 		bool tryToLoadIfUpdated();
-		Plugin* createPluginObject(const char* namePlugin);
+		Plugin* createPluginObject(const char* pluginName);
 	};
 };

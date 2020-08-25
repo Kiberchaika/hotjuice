@@ -12,7 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
-#include "MainComponent.h"
+#include "HotJuiceComponent.h"
 
 //==============================================================================
 /**
@@ -32,7 +32,7 @@ private:
     // access the processor object that created it.
     Juceglvst_audioProcessor& processor;
     
-    MainComponent* mainComponent;
+    HotJuiceComponent* hotJuiceComponent;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Juceglvst_audioProcessorEditor)
 };

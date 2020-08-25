@@ -19,7 +19,7 @@
 #else
 #endif
 
-#define PLUGIN_ADD_FUNCTION(className, funcName) addCustomFunction(#funcName, (hotjuice::PluginBase::CustomFunc)&className::funcName)
+#define PLUGIN_ADD_FUNCTION(className, funcName) addCustomFunction(#funcName, (hotjuice::BasePlugin::CustomFunc)&className::funcName)
 
 #define PLUGIN_ADD_CONSTRUCTOR(className) \
 	hotjuice::PluginUtils::addConstrutor(#className, []() { \
@@ -81,15 +81,15 @@ namespace hotjuice {
     };
 
 
-	class PluginBase {
+	class BasePlugin {
 	public:
-		typedef void(PluginBase::*CustomFunc)(void*, void*);
+		typedef void(BasePlugin::*CustomFunc)(void*, void*);
 
 	private:
 
 		bool reloaded;
 		std::map<std::string, std::function<void(void*, void*)>> mapOfCallbacks;
-		std::map<std::string, hotjuice::PluginBase::CustomFunc> mapOfCustomFunctions;
+		std::map<std::string, hotjuice::BasePlugin::CustomFunc> mapOfCustomFunctions;
 
 	public:
         
@@ -104,10 +104,10 @@ namespace hotjuice {
             return nullptr;
         }
 
-		PluginBase();
-		virtual ~PluginBase();
+		BasePlugin();
+		virtual ~BasePlugin();
 
-		virtual PluginBase* getPtrPlugin();
+		virtual BasePlugin* getPtrPlugin();
 
 		virtual void setReloaded();
 		virtual bool isReloaded();
@@ -130,13 +130,13 @@ namespace hotjuice {
 		virtual void keyPressed(int key);
 		virtual void keyReleased(int key);
 
-		virtual void clone(PluginBase* obj);
+		virtual void clone(BasePlugin* obj);
 
 		void custom(char* name = nullptr, void* in = nullptr, void* out = nullptr);
 		void callback(char* name = nullptr, void* in = nullptr, void* out = nullptr);
 
 		void addCallback(char* name, std::function<void(void*, void*)> callback);
-		void addCustomFunction(std::string name, PluginBase::CustomFunc func);
+		void addCustomFunction(std::string name, BasePlugin::CustomFunc func);
 	};
 
 	namespace PluginUtils {

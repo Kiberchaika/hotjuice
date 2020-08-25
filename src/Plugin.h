@@ -1,25 +1,25 @@
 #pragma once
 
-#include "PluginBase.h"
+#include "BasePlugin.h"
 
 namespace hotjuice {
 
 	class Plugin {
-		PluginBase* pluginBase;
+		BasePlugin* basePlugin;
 		std::vector<Plugin*>* plugins;
-		std::string namePlugin;
+		std::string pluginName;
 
 		friend class PluginManager;
         
         
 	public:
-		Plugin(PluginBase* pluginBase, std::vector<Plugin*>* plugins, std::string namePlugin);
+		Plugin(BasePlugin* basePlugin, std::vector<Plugin*>* plugins, std::string namePlugin);
 		~Plugin();
 
         void addParameter(PluginParameter* parameter);
 
-        PluginBase* getPtrPlugin();
-		const char* getNamePlugin();
+        BasePlugin* getPtrPlugin();
+		const char* getPluginName();
 
 		void setReloaded();
 		bool isReloaded();
@@ -45,6 +45,6 @@ namespace hotjuice {
 		void custom(char* name, void* in = nullptr, void* out = nullptr);
 		void addCallback(char*, std::function<void(void*, void*)> callback);
 
-		void clone(PluginBase* obj);
+		void clone(BasePlugin* obj);
 	};
 };

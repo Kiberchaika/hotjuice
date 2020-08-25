@@ -131,14 +131,14 @@ bool hotjuice::PluginManager::tryToLoad(std::string pathLib) {
 
 		// hotswap
 		for (size_t i = 0; i < plugins.size(); i++) {
-			PluginBase* ptr = (PluginBase*)(funcCreatePlugin)((char*)plugins[i]->namePlugin.c_str());
+			BasePlugin* ptr = (BasePlugin*)(funcCreatePlugin)((char*)plugins[i]->pluginName.c_str());
 			ptr->setReloaded();
-			ptr->clone(plugins[i]->pluginBase);
+			ptr->clone(plugins[i]->basePlugin);
             
-            ptr->pluginParameters = plugins[i]->pluginBase->pluginParameters;
+            ptr->pluginParameters = plugins[i]->basePlugin->pluginParameters;
 
-			delete plugins[i]->pluginBase;
-			plugins[i]->pluginBase = ptr;
+			delete plugins[i]->basePlugin;
+			plugins[i]->basePlugin = ptr;
 		} 
 
 		// callback after
@@ -225,16 +225,16 @@ bool hotjuice::PluginManager::tryToLoadIfUpdated() {
 	return reloaded;
 }
 
-hotjuice::Plugin* hotjuice::PluginManager::createPluginObject(const char * namePlugin) {
+hotjuice::Plugin* hotjuice::PluginManager::createPluginObject(const char * pluginName) {
 	if (!loaded || funcCreatePlugin == NULL) return nullptr;
 
-	PluginBase* pluginBase = (PluginBase*)(funcCreatePlugin)(namePlugin);
-	if (pluginBase == NULL) {
-		std::cout << "could not find the plugin " << namePlugin << std::endl;
+	BasePlugin* basePlugin = (BasePlugin*)(funcCreatePlugin)(pluginName);
+	if (basePlugin == NULL) {
+		std::cout << "could not find the plugin " << pluginName << std::endl;
 		return nullptr;
 	}
 
-	Plugin* plugin = new Plugin(pluginBase, &plugins, namePlugin);
+	Plugin* plugin = new Plugin(basePlugin, &plugins, pluginName);
 	plugins.push_back(plugin);
 
 	return plugin;
