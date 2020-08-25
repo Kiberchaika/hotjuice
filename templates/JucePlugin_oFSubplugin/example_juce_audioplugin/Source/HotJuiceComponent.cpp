@@ -48,19 +48,19 @@ HotJuiceComponent::HotJuiceComponent()
     // you add any child components.
     openGLContext.setOpenGLVersionRequired (OpenGLContext::OpenGLVersion::openGL3_2);
     openGLContext.setMultisamplingEnabled(true);
-	
+
 	OpenGLPixelFormat pixelFormat;
 	pixelFormat.multisamplingLevel = 8;
 	openGLContext.setPixelFormat(pixelFormat);
 
-    setSize(800, 600);
+    setSize(500, 540);
 	addKeyListener(this);
 	setWantsKeyboardFocus(true);
 
-	keyPressedAlt = false;
-	keyPressedCommand = false;
-	keyPressedCtrl = false;
-	keyPressedShift = false;
+	keyAltPressed = false;
+	keyCommandPressed = false;
+	keyCtrlPressed = false;
+	keyShiftPressed = false;
 
 	lastFrameTime = std::chrono::high_resolution_clock::now();
 }
@@ -175,9 +175,9 @@ int HotJuiceComponent::convertKey(int key) {
 bool HotJuiceComponent::keyPressed(const KeyPress & key, Component * originatingComponent)
 {
     ///*
-    if (key.getModifiers().isAltDown() != keyPressedAlt) {
-        keyPressedAlt = !keyPressedAlt;
-        if (keyPressedAlt) {
+    if (key.getModifiers().isAltDown() != keyAltPressed) {
+        keyAltPressed = !keyAltPressed;
+        if (keyAltPressed) {
             sendPluginKeyPressed(ofKey::OF_KEY_ALT);
         }
         else {
@@ -185,9 +185,9 @@ bool HotJuiceComponent::keyPressed(const KeyPress & key, Component * originating
         }
     }
 
-    if (key.getModifiers().isCtrlDown() != keyPressedCtrl) {
-        keyPressedCtrl = !keyPressedCtrl;
-        if (keyPressedCtrl) {
+    if (key.getModifiers().isCtrlDown() != keyCtrlPressed) {
+        keyCtrlPressed = !keyCtrlPressed;
+        if (keyCtrlPressed) {
             sendPluginKeyPressed(ofKey::OF_KEY_CONTROL);
         }
         else {
@@ -195,9 +195,9 @@ bool HotJuiceComponent::keyPressed(const KeyPress & key, Component * originating
         }
     }
 
-    if (key.getModifiers().isShiftDown() != keyPressedShift) {
-        keyPressedShift = !keyPressedShift;
-        if (keyPressedShift) {
+    if (key.getModifiers().isShiftDown() != keyShiftPressed) {
+        keyShiftPressed = !keyShiftPressed;
+        if (keyShiftPressed) {
             sendPluginKeyPressed(ofKey::OF_KEY_SHIFT);
         }
         else {
@@ -205,9 +205,9 @@ bool HotJuiceComponent::keyPressed(const KeyPress & key, Component * originating
         }
     }
 
-    if (key.getModifiers().isCommandDown() != keyPressedCommand) {
-        keyPressedCommand = !keyPressedCommand;
-        if (keyPressedCommand) {
+    if (key.getModifiers().isCommandDown() != keyCommandPressed) {
+        keyCommandPressed = !keyCommandPressed;
+        if (keyCommandPressed) {
             sendPluginKeyPressed(ofKey::OF_KEY_COMMAND);
         }
         else {

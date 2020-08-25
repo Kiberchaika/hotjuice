@@ -55,10 +55,10 @@ public:
 	void mouseDrag(const MouseEvent& event) override;
 
 	std::map<int, juce_wchar> keysPressed;
-	bool keyPressedAlt;
-	bool keyPressedCommand;
-	bool keyPressedCtrl;
-	bool keyPressedShift;
+	bool keyAltPressed;
+	bool keyCommandPressed;
+	bool keyCtrlPressed;
+	bool keyShiftPressed;
 
 	int convertKey(int key);
 
