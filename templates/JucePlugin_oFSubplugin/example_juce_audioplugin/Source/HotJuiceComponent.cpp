@@ -98,6 +98,12 @@ void HotJuiceComponent::render()
 			processor->plugin->addCallback("showCursor", [&](void* in, void* out) {
 				setMouseCursor(MouseCursor::NormalCursor);
 			});
+			processor->plugin->addCallback("setCursorPosition", [&](void* in, void* out) {
+				if (in != nullptr) {
+					int(&pos)[2] = *reinterpret_cast<int(*)[2]>(in);
+					Desktop::setMousePosition(juce::Point<int>(pos[0], pos[1]));
+				}
+			});
 			processor->needToReinitRender = false;
 		}
 
