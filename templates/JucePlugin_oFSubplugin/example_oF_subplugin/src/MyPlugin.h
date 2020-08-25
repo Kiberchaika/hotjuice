@@ -51,6 +51,8 @@ public:
 #endif
 
 		cout << "creating MyPlugin" << endl;
+		
+		PLUGIN_ADD_FUNCTION(MyPlugin, test);
 	}
 
 
@@ -247,8 +249,8 @@ public:
 		//_log += "buffer count: "  +  std::to_string(std::get<1>(data)) + "\r\n";
 	}
 
-	void clone(hotjuice::PluginBase* pluginBase) override {
-		MyPlugin* plugin = (MyPlugin*)pluginBase;
+	void clone(hotjuice::BasePlugin* basePlugin) override {
+		MyPlugin* plugin = (MyPlugin*)basePlugin;
 
 		a = plugin->a; 
 		b = plugin->b;
@@ -259,10 +261,6 @@ public:
 	}
 };
 
-PLUGIN_LOADER_WITH_FUNCTIONS(MyPlugin,
-	{
-		PLUGIN_ADD_FUNCTION(MyPlugin, test);
-	}
-);
+PLUGIN_LOADER(MyPlugin);
 
 
