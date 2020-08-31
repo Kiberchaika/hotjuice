@@ -51,6 +51,7 @@ public:
 #endif
 
 		cout << "creating MyPlugin" << endl;
+        m.setResourcesPath(pathToResources);
 		
 		PLUGIN_ADD_FUNCTION(MyPlugin, test);
 	}
@@ -71,23 +72,12 @@ public:
 
 		m.setWindow((ofAppBaseWindow*)(&window));
 		m.setRenderer((ofBaseGLRenderer*)(window.renderer().get()));
+		m.clearFontsCache();
 
 		//logo.clear();
 		//logo.load(pathToResources + "logo.png");
-
-		reloadFonts();
 	}
     
-    void reloadFonts() {
-        m.setupFonts(
-            pathToResources + "Roboto-Regular.ttf", 12 * lastUIScale,
-            pathToResources + "Roboto-Regular.ttf", 20 * lastUIScale,
-            pathToResources + "Roboto-Regular.ttf", 12 * lastUIScale,
-            true
-        );
-    }
-
-
 	void setup(void* in, void* out) override {
 		if (!isCloned) {
 			panes[0].position = 0.5;
@@ -102,7 +92,6 @@ public:
 	void draw(void* in, void* out) override {
         if (getDesktopScale() != lastUIScale) {
             lastUIScale = getDesktopScale();
-            reloadFonts();
         }
         
 		ofBaseRenderer& renderer = *(window.renderer());
