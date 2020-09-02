@@ -58,7 +58,7 @@ namespace hotjuice {
             getValue = getter;
             setValue = setter;
         }
-        
+
         #if defined(JUCE_APP_VERSION)
 
         juce::RangedAudioParameter* parameterPointer;
@@ -72,7 +72,9 @@ namespace hotjuice {
                 return ((juce::AudioParameterFloat*)parameterPointer)->get();
                 
             };
-            setValue = [&](float v){ ((juce::AudioParameterFloat*)parameterPointer)->setValueNotifyingHost(v);
+            setValue = [&](float v){
+                float normalizedValue = ((juce::AudioParameterFloat*)parameterPointer)->convertTo0to1(v);
+                ((juce::AudioParameterFloat*)parameterPointer)->setValueNotifyingHost(normalizedValue);
             };
         }
         
