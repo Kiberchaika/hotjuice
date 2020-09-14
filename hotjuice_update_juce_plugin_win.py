@@ -14,6 +14,7 @@ import sys
 sys.path.append(pathWorkingDir)
 from project_settings import *
 
+print(os.path.join(pathWorkingDir, sys.argv[1]))
 for subdir, dirs, files in os.walk(os.path.join(pathWorkingDir, sys.argv[1])):
     for name in files:
         path_to_project = subdir + os.sep + name

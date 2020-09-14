@@ -73,6 +73,9 @@ Juceglvst_audioProcessor::Juceglvst_audioProcessor()
 	);
 
 	plugin = pluginManager->createPluginObject("MyPlugin");
+	if (plugin) {
+		plugin->setup();
+	}
 
 	startTimer(100);
 }

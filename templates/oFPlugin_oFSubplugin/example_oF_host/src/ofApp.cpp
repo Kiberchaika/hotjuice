@@ -73,6 +73,9 @@ void ofApp::setup(){
 	);
 
 	plugin = pluginManager->createPluginObject("MyPlugin");
+	if (plugin) {
+		plugin->setup();
+	}
 
 
 }
