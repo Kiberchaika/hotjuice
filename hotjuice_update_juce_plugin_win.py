@@ -14,7 +14,8 @@ import sys
 sys.path.append(pathWorkingDir)
 from project_settings import *
 
-print(os.path.join(pathWorkingDir, sys.argv[1]))
+project_name = sys.argv[1]
+print(os.path.join(pathWorkingDir, project_name))
 
 def include_file(filePath):
     ext = os.path.splitext(filePath)[1]
@@ -38,7 +39,7 @@ def include_files_from_dir(path):
     for file in os.listdir(path):
         include_file(os.path.join(path, file))
 
-for subdir, dirs, files in os.walk(os.path.join(pathWorkingDir, sys.argv[1])):
+for subdir, dirs, files in os.walk(os.path.join(pathWorkingDir, project_name)):
     for name in files:
         path_to_project = subdir + os.sep + name
 

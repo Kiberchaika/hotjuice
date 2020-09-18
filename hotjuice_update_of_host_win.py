@@ -14,7 +14,8 @@ import sys
 sys.path.append(pathWorkingDir)
 from project_settings import *
 
-path_to_project = os.path.join(pathWorkingDir, sys.argv[1], sys.argv[1] + '.vcxproj')
+project_name = sys.argv[1]
+path_to_project = os.path.join(pathWorkingDir, project_name, project_name + '.vcxproj')
 tree = etree.parse(path_to_project)
 
 namespaces = {'ns':'http://schemas.microsoft.com/developer/msbuild/2003'}
