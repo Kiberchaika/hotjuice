@@ -22,7 +22,7 @@ For the OF plugin, use our generators for processing created in the OF project:
 4. Go to folder with your subplugin project and `resources` folder and call `hotjuice_update_of_subplugin_win.py YOUR_SUBPLUGIN_PROJECT_NAME`
 
 - OSX:
-1. Install pbxproj `pip install pbxproj`
+1. Install pbxproj fork `pip install git+https://github.com/yeswecan/mod-pbxproj.git`
 2. `chmod +x hotjuice_update_of_subplugin_osx.py`
 3. Add this directory to PATH env (*CHANGE /path/to/hotjuice*)
    - `echo 'export PATH=/path/to/hotjuice:$PATH' >>~/.zshrc` or
