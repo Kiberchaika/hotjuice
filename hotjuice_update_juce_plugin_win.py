@@ -15,6 +15,29 @@ sys.path.append(pathWorkingDir)
 from project_settings import *
 
 print(os.path.join(pathWorkingDir, sys.argv[1]))
+
+def include_file(filePath):
+    ext = os.path.splitext(filePath)[1]
+    section = None
+    if ext == '.cpp' or ext == '.c':
+        section = 'ClCompile'
+    elif ext == '.hpp' or ext == '.h':
+        section = 'ClInclude'
+
+    if section:
+        isFound = False
+        el = tree.xpath('//ns:ItemGroup/ns:' + section + '/..', namespaces=namespaces)[0]
+        for el_ in tree.xpath('//ns:ItemGroup/ns:' + section, namespaces=namespaces):
+            if el_.attrib['Include'] == filePath:
+                isFound = True
+
+        if not isFound:
+            el.append(etree.XML('<' + section + ' Include="' + filePath + '"/>'))
+
+def include_files_from_dir(path):
+    for file in os.listdir(path):
+        include_file(os.path.join(path, file))
+
 for subdir, dirs, files in os.walk(os.path.join(pathWorkingDir, sys.argv[1])):
     for name in files:
         path_to_project = subdir + os.sep + name
@@ -30,24 +53,7 @@ for subdir, dirs, files in os.walk(os.path.join(pathWorkingDir, sys.argv[1])):
                 if el.text.find(pathHotjuice) < 0:
                     el.text = el.text + ";" + pathHotjuice
 
-
-            def include_files(section, extension):
-                el = tree.xpath('//ns:ItemGroup/ns:' + section + '/..', namespaces=namespaces)[0]
-                for file in os.listdir(pathHotjuice):
-                    if file.endswith(extension):
-
-                        path = os.path.join(pathHotjuice, file)
-                        isFound = False
-                        for el_ in tree.xpath('//ns:ItemGroup/ns:' + section, namespaces=namespaces):
-                            if el_.attrib['Include'] == path:
-                                isFound = True
-
-                        if not isFound:
-                            el.append(etree.XML('<' + section + ' Include="' + path + '"/>'))
-
-
             # add include files
-            include_files('ClCompile', '.cpp')
-            include_files('ClInclude', '.h')
+            include_files_from_dir(pathHotjuice)
 
             tree.write(path_to_project)

@@ -35,23 +35,34 @@ for el in tree.xpath('//ns:PreprocessorDefinitions', namespaces=namespaces):
 for el in tree.xpath('//ns:ConfigurationType', namespaces=namespaces):
     el.text = 'DynamicLibrary'
 
-def include_files(section, extension):
-    el = tree.xpath('//ns:ItemGroup/ns:' + section + '/..', namespaces=namespaces)[0]
-    for file in os.listdir(pathHotjuice):
-        if file.endswith(extension):
+def include_file(filePath):
+    ext = os.path.splitext(filePath)[1]
+    section = None
+    if ext == '.cpp' or ext == '.c':
+        section = 'ClCompile'
+    elif ext == '.hpp' or ext == '.h':
+        section = 'ClInclude'
 
-            path = os.path.join(pathHotjuice, file)
-            isFound = False
-            for el_ in tree.xpath('//ns:ItemGroup/ns:' + section, namespaces=namespaces):
-                if el_.attrib['Include'] == path:
-                    isFound = True
+    if section:
+        isFound = False
+        el = tree.xpath('//ns:ItemGroup/ns:' + section + '/..', namespaces=namespaces)[0]
+        for el_ in tree.xpath('//ns:ItemGroup/ns:' + section, namespaces=namespaces):
+            if el_.attrib['Include'] == filePath:
+                isFound = True
 
-            if not isFound:
-                el.append(etree.XML('<' + section + ' Include="' + path + '"/>'))
+        if not isFound:
+            el.append(etree.XML('<' + section + ' Include="' + filePath + '"/>'))
+
+def include_files_from_dir(path):
+    for file in os.listdir(path):
+        include_file(os.path.join(path, file))
 
 # add include files
-include_files('ClCompile', '.cpp')
-include_files('ClInclude', '.h')
+include_files_from_dir(pathHotjuice)
+
+# add additional sources
+for filePath in include_files:
+    include_file(filePath)
 
 path_to_plugin = os.path.join(os.environ.get("APPDATA"), company_name, project_name)
 
