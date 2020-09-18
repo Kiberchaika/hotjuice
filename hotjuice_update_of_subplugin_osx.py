@@ -7,6 +7,7 @@ print("python path:", sys.executable)
 
 from pbxproj import XcodeProject
 from pbxproj import PBXShellScriptBuildPhase
+import json
 
 class bcolors:
     HEADER = '\033[95m'
@@ -68,7 +69,7 @@ filewriter.close()
 
 
 
-project = XcodeProject.load(path_to_xcode_project)
+project = XcodeProject(json.loads(filetext), path_to_xcode_project)
 
 
 # Updating build script
@@ -149,6 +150,10 @@ project.remove_files_by_path("src/main.cpp")
 
 group = project.get_or_create_group('hotjuice_source')
 project.add_folder(hotjuice_path + "/src", parent=group)
+
+# add additional sources
+for filePath in include_files:
+    project.add_file(filePath)
 
 # setting bundle id
 
