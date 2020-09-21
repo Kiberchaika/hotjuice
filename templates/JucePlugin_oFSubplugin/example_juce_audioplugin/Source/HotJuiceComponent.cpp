@@ -54,8 +54,8 @@ HotJuiceComponent::HotJuiceComponent()
 	openGLContext.setPixelFormat(pixelFormat);
 
     setSize(500, 540);
+    addMouseListener(this, true);
 	addKeyListener(this);
-	setWantsKeyboardFocus(true);
 
 	keyAltPressed = false;
 	keyCommandPressed = false;
