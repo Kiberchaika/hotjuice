@@ -11,20 +11,13 @@
 #pragma once
  
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "PluginManager.h"
-#include "Plugin.h"
+#include "HotJuicePluginProcessor.h"
 
 //==============================================================================
 /**
 */
-class Juceglvst_audioProcessor  : public AudioProcessor, public Timer 
+class Juceglvst_audioProcessor  : public HotJuicePluginProcessor, public AudioProcessor, public Timer
 {
-public:
-	hotjuice::PluginManager* pluginManager;
-	hotjuice::Plugin* plugin;
-
-	bool needToReinitRender;
-	bool isReloading;
 
 public:
     //==============================================================================

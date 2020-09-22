@@ -1,12 +1,6 @@
-/*
- ==============================================================================
- 
- This file was auto-generated!
- 
- ==============================================================================
- */
-
 #include "HotJuiceComponent.h"
+
+#if defined(JUCE_APP_VERSION)
 
 enum ofKey {
 	OF_KEY_SHIFT = 0x1,
@@ -274,3 +268,5 @@ void HotJuiceComponent::resized()
     // update their positions.
 }
 
+
+#endif

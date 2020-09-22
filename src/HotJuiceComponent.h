@@ -1,12 +1,6 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-  ==============================================================================
-*/
-
 #pragma once
+
+#if defined(JUCE_APP_VERSION)
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
@@ -18,10 +12,9 @@
 //#include <GL/glu.h>
 #endif
 
+#include "HotJuicePluginProcessor.h"
 #include "PluginManager.h"
 #include "Plugin.h"
-
-#include "PluginProcessor.h"
 
 //==============================================================================
 /*
@@ -32,7 +25,7 @@
 class HotJuiceComponent : public OpenGLAppComponent, public KeyListener
 {
 public:
-    Juceglvst_audioProcessor* processor;
+	HotJuicePluginProcessor* processor;
 	std::chrono::time_point<std::chrono::steady_clock> lastFrameTime;
 
 public:
@@ -74,3 +67,5 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HotJuiceComponent)
 };
+
+#endif
