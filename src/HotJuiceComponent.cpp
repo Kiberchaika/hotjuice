@@ -48,7 +48,6 @@ HotJuiceComponent::HotJuiceComponent()
 	openGLContext.setPixelFormat(pixelFormat);
 
     setSize(500, 540);
-    addMouseListener(this, true);
 	addKeyListener(this);
 
 	keyAltPressed = false;
