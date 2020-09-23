@@ -24,7 +24,7 @@ hotjuice::Plugin::~Plugin() {
 }
 
 void hotjuice::Plugin::addParameter(hotjuice::PluginParameter* parameter) {
-    getPtrPlugin()->pluginParameters.push_back(parameter);
+	if (basePlugin) basePlugin->pluginParameters.push_back(parameter);
 }
 
 hotjuice::BasePlugin* hotjuice::Plugin::getPtrPlugin() {
