@@ -31,7 +31,7 @@ For the OF plugin, use our generators for processing created in the OF project:
 5. Make any change to xcode project settings (for example change the build version number)
 6. Change directory to parent directory of subplugin project and `resources` and run script (changing name of `YOUR_SUBPLUGIN_PROJECT_NAME`): 
    - `hotjuice_update_of_subplugin_osx.py YOUR_SUBPLUGIN_PROJECT_NAME`
-7. Use only debug build
-
+7. For OSX release build change "Optimisation level" to "None" in build settings for subplugin prj
+ 
 ## TODO
 - Use https://github.com/CocoaPods/Xcodeproj to regenerate it from the script instead
