@@ -31,14 +31,17 @@ Juceglvst_audioProcessor::Juceglvst_audioProcessor()
 #if defined (_WIN32)
 	HotJuicePluginProcessor::setup(
 		"MyPlugin", "example_oF_subplugin",
-		juce::File::getSpecialLocation(juce::File::SpecialLocationType::userApplicationDataDirectory).getChildFile("MyCompany/Hotjuice oF and JUCE example").getFullPathName().toStdString(),
+		juce::File::getSpecialLocation(juce::File::SpecialLocationType::userApplicationDataDirectory).
+		getChildFile("MyCompany/Hotjuice oF and JUCE example").getFullPathName().toStdString(),
 		{ "FreeImage.dll", "fmodex64.dll","fmodexL64.dll" }
 	);
 #elif defined (__APPLE__)
 	HotJuicePluginProcessor::setup(
 		"MyPlugin", "example_oF_subplugin",
-		juce::File::getSpecialLocation(juce::File::SpecialLocationType::userApplicationDataDirectory).getChildFile("MyCompany/com.company.applicatione").getFullPathName().toStdString(),
+		juce::File::getSpecialLocation(juce::File::SpecialLocationType::userApplicationDataDirectory).
+		getChildFile("Application Support").getChildFile("MyCompany/com.company.applicatione").getFullPathName().toStdString(),
 		{ "libfmodex.dylib" }
+		
 	);
 #endif
 
