@@ -134,6 +134,9 @@ namespace hotjuice {
 
 		virtual void clone(BasePlugin* obj);
 
+		virtual void setStateString(char* str);
+		virtual char* getStateString();
+
 		void custom(char* name = nullptr, void* in = nullptr, void* out = nullptr);
 		void callback(char* name = nullptr, void* in = nullptr, void* out = nullptr);
 

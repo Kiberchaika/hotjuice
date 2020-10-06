@@ -95,6 +95,13 @@ void hotjuice::BasePlugin::callback(char * name, void * in, void * out) {
 void hotjuice::BasePlugin::clone(BasePlugin * obj) {
 }
 
+void hotjuice::BasePlugin::setStateString(char* str) {
+}
+
+char* hotjuice::BasePlugin::getStateString() {
+	return nullptr;
+}
+
 void* createPlugin(const char* name)
 { 
 	hotjuice::BasePlugin* ptr = nullptr;

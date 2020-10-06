@@ -46,5 +46,8 @@ namespace hotjuice {
 		void addCallback(char*, std::function<void(void*, void*)> callback);
 
 		void clone(BasePlugin* obj);
+
+		void setStateString(char* str);
+		char* getStateString();
 	};
 };

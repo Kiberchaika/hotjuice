@@ -112,3 +112,15 @@ void hotjuice::Plugin::clone(BasePlugin* obj) {
 	if (basePlugin) basePlugin->clone(obj);
 }
 
+void hotjuice::Plugin::setStateString(char* str) {
+	if (basePlugin) basePlugin->setStateString(str);
+}
+
+char* hotjuice::Plugin::getStateString() {
+	if (basePlugin) {
+		return basePlugin->getStateString();
+	}
+	return nullptr;
+}
+
+
