@@ -48,7 +48,6 @@ HotJuiceComponent::HotJuiceComponent()
 	openGLContext.setPixelFormat(pixelFormat);
 
     setSize(500, 540);
-	addKeyListener(this);
 
 	keyAltPressed = false;
 	keyCommandPressed = false;
@@ -68,6 +67,8 @@ HotJuiceComponent::~HotJuiceComponent()
 //==============================================================================
 void HotJuiceComponent::initialise()
 {
+	getTopLevelComponent()->addKeyListener(this);
+
 	processor->needToReinitRender = true;
 }
 
@@ -173,47 +174,6 @@ int HotJuiceComponent::convertKey(int key) {
 
 bool HotJuiceComponent::keyPressed(const KeyPress & key, Component * originatingComponent)
 {
-    ///*
-    if (key.getModifiers().isAltDown() != keyAltPressed) {
-        keyAltPressed = !keyAltPressed;
-        if (keyAltPressed) {
-            sendPluginKeyPressed(ofKey::OF_KEY_ALT);
-        }
-        else {
-            sendPluginKeyReleased(ofKey::OF_KEY_ALT);
-        }
-    }
-
-    if (key.getModifiers().isCtrlDown() != keyCtrlPressed) {
-        keyCtrlPressed = !keyCtrlPressed;
-        if (keyCtrlPressed) {
-            sendPluginKeyPressed(ofKey::OF_KEY_CONTROL);
-        }
-        else {
-            sendPluginKeyReleased(ofKey::OF_KEY_CONTROL);
-        }
-    }
-
-    if (key.getModifiers().isShiftDown() != keyShiftPressed) {
-        keyShiftPressed = !keyShiftPressed;
-        if (keyShiftPressed) {
-            sendPluginKeyPressed(ofKey::OF_KEY_SHIFT);
-        }
-        else {
-            sendPluginKeyReleased(ofKey::OF_KEY_SHIFT);
-        }
-    }
-
-    if (key.getModifiers().isCommandDown() != keyCommandPressed) {
-        keyCommandPressed = !keyCommandPressed;
-        if (keyCommandPressed) {
-            sendPluginKeyPressed(ofKey::OF_KEY_COMMAND);
-        }
-        else {
-            sendPluginKeyReleased(ofKey::OF_KEY_COMMAND);
-        }
-    }
-
     int keyCode = key.getKeyCode();
     if (keysPressed.find(keyCode) == keysPressed.end()) {
         keysPressed[keyCode] = key.getTextCharacter();
@@ -226,7 +186,48 @@ bool HotJuiceComponent::keyPressed(const KeyPress & key, Component * originating
 }
 
 bool HotJuiceComponent::keyStateChanged(bool isKeyDown, juce::Component * originatingComponent) {
-    for (auto iter = keysPressed.begin(); iter != keysPressed.end(); ++iter) {
+	 
+	if (ModifierKeys::getCurrentModifiers().isAltDown() != keyAltPressed) {
+		keyAltPressed = !keyAltPressed;
+		if (keyAltPressed) {
+			sendPluginKeyPressed(ofKey::OF_KEY_ALT);
+		}
+		else {
+			sendPluginKeyReleased(ofKey::OF_KEY_ALT);
+		}
+	}
+
+	if (ModifierKeys::getCurrentModifiers().isCtrlDown() != keyCtrlPressed) {
+		keyCtrlPressed = !keyCtrlPressed;
+		if (keyCtrlPressed) {
+			sendPluginKeyPressed(ofKey::OF_KEY_CONTROL);
+		}
+		else {
+			sendPluginKeyReleased(ofKey::OF_KEY_CONTROL);
+		}
+	}
+
+	if (ModifierKeys::getCurrentModifiers().isShiftDown() != keyShiftPressed) {
+		keyShiftPressed = !keyShiftPressed;
+		if (keyShiftPressed) {
+			sendPluginKeyPressed(ofKey::OF_KEY_SHIFT);
+		}
+		else {
+			sendPluginKeyReleased(ofKey::OF_KEY_SHIFT);
+		}
+	}
+
+	if (ModifierKeys::getCurrentModifiers().isCommandDown() != keyCommandPressed) {
+		keyCommandPressed = !keyCommandPressed;
+		if (keyCommandPressed) {
+			sendPluginKeyPressed(ofKey::OF_KEY_COMMAND);
+		}
+		else {
+			sendPluginKeyReleased(ofKey::OF_KEY_COMMAND);
+		}
+	}
+	 
+	for (auto iter = keysPressed.begin(); iter != keysPressed.end(); ++iter) {
         auto keyCode = iter->first;
         auto textCharacter = iter->second;
 
