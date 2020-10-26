@@ -80,7 +80,7 @@ void HotJuiceComponent::shutdown()
 void HotJuiceComponent::render()
 {
 	// limit fps
-	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - lastFrameTime) < std::chrono::milliseconds{ 1000 / 60 }) return;
+	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - lastFrameTime) < std::chrono::milliseconds{ 1000 / 30 }) return;
 	lastFrameTime = std::chrono::high_resolution_clock::now();
 
 	if (!processor->isReloading && processor->plugin) {
