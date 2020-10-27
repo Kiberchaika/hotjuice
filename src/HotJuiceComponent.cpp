@@ -46,13 +46,26 @@ HotJuiceComponent::HotJuiceComponent()
 	OpenGLPixelFormat pixelFormat;
 	pixelFormat.multisamplingLevel = 8;
 	openGLContext.setPixelFormat(pixelFormat);
+	
+
+	openGLContext.setComponentPaintingEnabled(false);
+	openGLContext.setContinuousRepainting(true);
+
+
+	//openGLContext.attachTo(*this);
 
     setSize(500, 540);
+	setWantsKeyboardFocus(true);
 
 	keyAltPressed = false;
 	keyCommandPressed = false;
 	keyCtrlPressed = false;
 	keyShiftPressed = false;
+
+	processor = nullptr;
+	plugin = nullptr;
+
+	isTransparent = false;
 
 	lastFrameTime = std::chrono::high_resolution_clock::now();
 }
@@ -63,11 +76,24 @@ HotJuiceComponent::~HotJuiceComponent()
     shutdownOpenGL();
 }
 
+#ifdef  WIN32
+void HotJuiceComponent::makeTransparent()
+{
+	HWND hWnd = (HWND)getWindowHandle();
+	LONG windowStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
+	SetWindowLong(hWnd, GWL_EXSTYLE, windowStyle | WS_EX_LAYERED);
+	SetLayeredWindowAttributes(hWnd, RGB(0, 0, 0), 255, LWA_COLORKEY);
+}
+#endif
 
 //==============================================================================
 void HotJuiceComponent::initialise()
 {
 	getTopLevelComponent()->addKeyListener(this);
+
+	if (isTransparent) {
+		makeTransparent();
+	}
 
 	processor->needToReinitRender = true;
 }
@@ -83,16 +109,16 @@ void HotJuiceComponent::render()
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - lastFrameTime) < std::chrono::milliseconds{ 1000 / 30 }) return;
 	lastFrameTime = std::chrono::high_resolution_clock::now();
 
-	if (!processor->isReloading && processor->plugin) {
+	if (!processor->isReloading && plugin) {
 		if (processor->needToReinitRender) {
-			processor->plugin->setupRenderer();
-			processor->plugin->addCallback("hideCursor", [&](void* in, void* out) {
+			plugin->setupRenderer();
+			plugin->addCallback("hideCursor", [&](void* in, void* out) {
 				setMouseCursor(MouseCursor::NoCursor);
 			});
-			processor->plugin->addCallback("showCursor", [&](void* in, void* out) {
+			plugin->addCallback("showCursor", [&](void* in, void* out) {
 				setMouseCursor(MouseCursor::NormalCursor);
 			});
-			processor->plugin->addCallback("setCursorPosition", [&](void* in, void* out) {
+			plugin->addCallback("setCursorPosition", [&](void* in, void* out) {
 				if (in != nullptr) {
 					int(&pos)[2] = *reinterpret_cast<int(*)[2]>(in);
 					Desktop::setMousePosition(localPointToGlobal(juce::Point<int>(pos[0], pos[1])));
@@ -102,8 +128,8 @@ void HotJuiceComponent::render()
 		}
 
 		/*
-		processor->plugin->custom("test");
-		processor->plugin->custom("test2");
+		plugin->custom("test");
+		plugin->custom("test2");
 		*/
         
 		// This clears the context with a black background.
@@ -111,40 +137,40 @@ void HotJuiceComponent::render()
 
 		float desktopScale = openGLContext.getRenderingScale();
         //float desktopScale = Desktop::getInstance().getDisplays().findDisplayForRect (getScreenBounds()).scale;
-        processor->plugin->setDesktopScale(desktopScale);
-		processor->plugin->setWindowSize(roundToInt(desktopScale * getWidth()), roundToInt(desktopScale * getHeight()));
+        plugin->setDesktopScale(desktopScale);
+		plugin->setWindowSize(roundToInt(desktopScale * getWidth()), roundToInt(desktopScale * getHeight()));
 
-		processor->plugin->draw();
+		plugin->draw();
 	}
-
+	
 }
 
 void HotJuiceComponent::mouseDrag(const MouseEvent & event)
 {
-    if (!processor->isReloading && processor->plugin) {
+    if (!processor->isReloading && plugin) {
         float desktopScale = openGLContext.getRenderingScale();
-        processor->plugin->mouseDragged(event.x * desktopScale, event.y * desktopScale, 0);
+        plugin->mouseDragged(event.x * desktopScale, event.y * desktopScale, 0);
     }
 }
 
 void HotJuiceComponent::mouseMove(const MouseEvent& event) {
-    if (!processor->isReloading && processor->plugin) {
+    if (!processor->isReloading && plugin) {
         float desktopScale = openGLContext.getRenderingScale();
-        processor->plugin->mouseMoved(event.x * desktopScale, event.y * desktopScale);
+        plugin->mouseMoved(event.x * desktopScale, event.y * desktopScale);
     }
 }
 
 void HotJuiceComponent::mouseDown(const MouseEvent& event) {
-    if (!processor->isReloading && processor->plugin) {
+    if (!processor->isReloading && plugin) {
         float desktopScale = openGLContext.getRenderingScale();
-        processor->plugin->mousePressed(event.x * desktopScale, event.y * desktopScale, 0);
+        plugin->mousePressed(event.x * desktopScale, event.y * desktopScale, 0);
     }
 }
 
 void HotJuiceComponent::mouseUp(const MouseEvent& event) {
-    if (!processor->isReloading && processor->plugin) {
+    if (!processor->isReloading && plugin) {
         float desktopScale = openGLContext.getRenderingScale();
-        processor->plugin->mouseReleased(event.x * desktopScale, event.y * desktopScale, 0);
+        plugin->mouseReleased(event.x * desktopScale, event.y * desktopScale, 0);
     }
 }
 
@@ -243,14 +269,14 @@ bool HotJuiceComponent::keyStateChanged(bool isKeyDown, juce::Component * origin
 }
 
 void HotJuiceComponent::sendPluginKeyPressed(int keyCode) {
-    if (!processor->isReloading && processor->plugin) {
-        processor->plugin->keyPressed(keyCode);
+    if (!processor->isReloading && plugin) {
+        plugin->keyPressed(keyCode);
     }
 }
 
 void HotJuiceComponent::sendPluginKeyReleased(int keyCode) {
-    if (!processor->isReloading && processor->plugin) {
-        processor->plugin->keyReleased(keyCode);
+    if (!processor->isReloading && plugin) {
+        plugin->keyReleased(keyCode);
     }
 }
 

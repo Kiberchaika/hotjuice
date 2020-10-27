@@ -9,7 +9,7 @@ HotJuicePluginProcessor::HotJuicePluginProcessor()
 {
 }
     
-void HotJuicePluginProcessor::setup(std::string pluginObjectName,  std::string pluginFilename, std::string pluginEnclosingFolder, std::vector<std::string> additionalFilesToCopy)
+void HotJuicePluginProcessor::setup(std::vector<std::string> pluginObjectNames,  std::string pluginFilename, std::string pluginEnclosingFolder, std::vector<std::string> additionalFilesToCopy)
 {
 	// Initialise GL objects for rendering here.
     pluginManager = new hotjuice::PluginManager();
@@ -18,7 +18,7 @@ void HotJuicePluginProcessor::setup(std::string pluginObjectName,  std::string p
     
 	isReloading = false;
 
-    //plugin = nullptr;
+	plugins.resize(pluginObjectNames.size());
 
 	pluginManager->addCallbackBeforeLoad(
 		[&]() -> void {
@@ -34,7 +34,9 @@ void HotJuicePluginProcessor::setup(std::string pluginObjectName,  std::string p
 		[&]() -> void {
 		std::cout << "callback" << std::endl;
 
-		plugin->setup();
+		for (int i = 0; i < plugins.size(); i++) {
+			plugins[i]->setup();
+		}
 
 		isReloading = false;
 
@@ -42,19 +44,24 @@ void HotJuicePluginProcessor::setup(std::string pluginObjectName,  std::string p
 	}
 	);
 
-	plugin = pluginManager->createPluginObject(pluginObjectName.c_str());
-	if (plugin) {
-		plugin->setup();
+	for (int i = 0; i < plugins.size(); i++) {
+		plugins[i] = pluginManager->createPluginObject(pluginObjectNames[i].c_str());
+		if (plugins[i]) {
+			plugins[i]->setup();
+		}
 	}
+	
 }
 
 HotJuicePluginProcessor::~HotJuicePluginProcessor()
 {
-    if (plugin) {
-        delete plugin;
-        plugin = nullptr;
-    }
-    
+	for (int i = 0; i < plugins.size(); i++) {
+		if (plugins[i]) {
+			delete plugins[i];
+			plugins[i] = nullptr;
+		}
+	}
+
     if (pluginManager) {
         delete pluginManager;
         pluginManager = nullptr;
@@ -70,8 +77,12 @@ void HotJuicePluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
 		std::get<2>(data) = sampleRate;
 	}
 
-	if (!isReloading && plugin) {
-		plugin->process(&data, nullptr);
+	if (!isReloading) {
+		for (int i = 0; i < plugins.size(); i++) {
+			if (plugins[i]) {
+				plugins[i]->process(&data, nullptr);
+			}
+		}
 	}
 }
 

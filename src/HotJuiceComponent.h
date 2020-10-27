@@ -27,6 +27,8 @@ class HotJuiceComponent : public OpenGLAppComponent, public KeyListener
 public:
 	HotJuicePluginProcessor* processor;
 	std::chrono::time_point<std::chrono::steady_clock> lastFrameTime;
+	hotjuice::Plugin* plugin;
+	bool isTransparent;
 
 public:
     //==============================================================================
@@ -46,6 +48,8 @@ public:
     void mouseDown(const MouseEvent& event) override;
 	void mouseUp(const MouseEvent& event) override;
 	void mouseDrag(const MouseEvent& event) override;
+
+	void makeTransparent();
 
 	std::map<int, juce_wchar> keysPressed;
 	bool keyAltPressed;

@@ -11,15 +11,15 @@ class HotJuicePluginProcessor
 {
 public:
 	hotjuice::PluginManager* pluginManager;
-	hotjuice::Plugin* plugin;
-
+	std::vector<hotjuice::Plugin*> plugins;
+	
 	bool needToReinitRender;
 	bool isReloading;
 
     HotJuicePluginProcessor();
     virtual ~HotJuicePluginProcessor();
 
-	void setup(std::string pluginObjectName, std::string pluginFilename, std::string pluginEnclosingFolder, std::vector<std::string> additionalFilesToCopy);
+	void setup(std::vector<std::string> pluginObjectNames, std::string pluginFilename, std::string pluginEnclosingFolder, std::vector<std::string> additionalFilesToCopy);
     void processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages, int totalNumInputChannels, int totalNumOutputChannels, int sampleRate);
 
 private:
