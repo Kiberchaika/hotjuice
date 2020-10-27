@@ -1,3 +1,4 @@
+#include <AppKit/NSOpenGL.h>
 #include "HotJuiceComponent.h"
  
 #ifndef  WIN32
