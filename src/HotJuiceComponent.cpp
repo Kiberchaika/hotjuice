@@ -48,8 +48,8 @@ HotJuiceComponent::HotJuiceComponent()
 	openGLContext.setPixelFormat(pixelFormat);
 	
 
-	openGLContext.setComponentPaintingEnabled(false);
-	openGLContext.setContinuousRepainting(true);
+//	openGLContext.setComponentPaintingEnabled(false);
+//	openGLContext.setContinuousRepainting(true);
 
 
 	//openGLContext.attachTo(*this);
