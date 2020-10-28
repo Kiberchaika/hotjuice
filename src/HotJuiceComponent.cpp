@@ -50,8 +50,6 @@ HotJuiceComponent::HotJuiceComponent()
 
 //	openGLContext.setComponentPaintingEnabled(false);
 //	openGLContext.setContinuousRepainting(true);
-
-
 	//openGLContext.attachTo(*this);
 
     setSize(500, 540);
