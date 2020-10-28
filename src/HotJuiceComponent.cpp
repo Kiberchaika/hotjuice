@@ -46,12 +46,6 @@ HotJuiceComponent::HotJuiceComponent()
 	OpenGLPixelFormat pixelFormat;
 	pixelFormat.multisamplingLevel = 8;
 	openGLContext.setPixelFormat(pixelFormat);
-	
-
-	openGLContext.setComponentPaintingEnabled(false);
-	openGLContext.setContinuousRepainting(true);
-
-
 	//openGLContext.attachTo(*this);
 
     setSize(500, 540);
