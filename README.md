@@ -32,6 +32,7 @@ For the OF plugin, use our generators for processing created in the OF project:
 6. Change directory to parent directory of subplugin project and `resources` and run script (changing name of `YOUR_SUBPLUGIN_PROJECT_NAME`): 
    - `hotjuice_update_of_subplugin_osx.py YOUR_SUBPLUGIN_PROJECT_NAME`
 7. For OSX release build change "Optimisation level" to "None" in build settings for subplugin prj
+8. For oF subplugin debug on OSX copy `libfmodex.dylib` to your bin folder too
  
 ## TODO
 - Use https://github.com/CocoaPods/Xcodeproj to regenerate it from the script instead
