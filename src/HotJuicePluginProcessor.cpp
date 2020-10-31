@@ -38,9 +38,9 @@ void HotJuicePluginProcessor::setup(std::vector<std::string> pluginObjectNames, 
 			plugins[i]->setup();
 		}
 
-		isReloading = false;
+        needToReinitRender = true;
 
-		needToReinitRender = true;
+        isReloading = false;
 	}
 	);
 
