@@ -24,6 +24,40 @@
 
 class HotJuiceComponent : public OpenGLAppComponent, public KeyListener
 {
+    
+    enum ofKey {
+        OF_KEY_SHIFT = 0x1,
+        OF_KEY_CONTROL = 0x2,
+        OF_KEY_ALT = 0x4,
+        OF_KEY_SUPER = 0x10,
+        OF_KEY_COMMAND = OF_KEY_SUPER,
+        
+        OF_KEY_BACKSPACE = 8,
+        OF_KEY_DEL = 127,
+        
+        OF_KEY_F1 = 0xe000,
+        OF_KEY_F2 = 0xe001,
+        OF_KEY_F3 = 0xe002,
+        OF_KEY_F4 = 0xe003,
+        OF_KEY_F5 = 0xe004,
+        OF_KEY_F6 = 0xe005,
+        OF_KEY_F7 = 0xe006,
+        OF_KEY_F8 = 0xe007,
+        OF_KEY_F9 = 0xe008,
+        OF_KEY_F10 = 0xe009,
+        OF_KEY_F11 = 0xe00A,
+        OF_KEY_F12 = 0xe00B,
+        OF_KEY_LEFT = 0xe00C,
+        OF_KEY_UP = 0xe00D,
+        OF_KEY_RIGHT = 0xe00E,
+        OF_KEY_DOWN = 0xe00F,
+        OF_KEY_PAGE_UP = 0xe010,
+        OF_KEY_PAGE_DOWN = 0xe011,
+        OF_KEY_HOME = 0xe012,
+        OF_KEY_END = 0xe013,
+        OF_KEY_INSERT = 0xe014,
+    };
+
 public:
 	HotJuicePluginProcessor* processor;
 	std::chrono::time_point<std::chrono::steady_clock> lastFrameTime;
@@ -49,8 +83,16 @@ public:
 	void mouseUp(const MouseEvent& event) override;
 	void mouseDrag(const MouseEvent& event) override;
 
-	void makeTransparent();
+    void makeTransparent();
 
+#ifndef WIN32
+    bool isMainWindow = false;
+    
+    void checkMainWindow();
+    void checkModifierKeys(void* nsevent);
+    void addKeyboardMonitor();
+#endif
+    
 	std::map<int, juce_wchar> keysPressed;
 	bool keyAltPressed;
 	bool keyCommandPressed;
@@ -65,6 +107,8 @@ public:
 	void sendPluginKeyPressed(int keyCode);
 	void sendPluginKeyReleased(int keyCode);
 
+ 
+    
 private:
     //==============================================================================
     // Your private member variables go here...
