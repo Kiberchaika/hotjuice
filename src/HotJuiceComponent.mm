@@ -85,6 +85,14 @@ void HotJuiceComponent::checkModifierKeys(void* event)
 
 void HotJuiceComponent::addKeyboardMonitor()
 {
+    [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskFlagsChanged handler:^NSEvent*(NSEvent* event){
+        if(isMainWindow) {
+            checkModifierKeys(event);
+            return nil;
+        }
+        return event;
+    }];
+    
     [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent*(NSEvent* event){
         if(isMainWindow) {
             checkModifierKeys(event);
