@@ -97,6 +97,7 @@ void HotJuiceComponent::addKeyboardMonitor()
         if(isMainWindow) {
             checkModifierKeys(event);
             sendPluginKeyPressed(event.keyCode);
+            return nil;
         }
         return event;
     }];
@@ -105,6 +106,7 @@ void HotJuiceComponent::addKeyboardMonitor()
         if(isMainWindow) {
             checkModifierKeys(event);
             sendPluginKeyReleased(event.keyCode);
+            return nil;
         }
         return event;
     }];
