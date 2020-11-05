@@ -89,7 +89,6 @@ public:
     bool isWindowFocused = false;
     
     void checkMainWindow();
-    void checkModifierKeys(void* nsevent);
     void addKeyboardMonitor();
 #endif
     

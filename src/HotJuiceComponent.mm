@@ -75,54 +75,8 @@ void HotJuiceComponent::checkMainWindow()
     }
 }
 
-void HotJuiceComponent::checkModifierKeys(void* event)
-{
-    NSEvent* nsevent = (NSEvent*)event;
-    
-    if (([nsevent modifierFlags] & NSAlternateKeyMask) != keyAltPressed) {
-        keyAltPressed = !keyAltPressed;
-        if (keyAltPressed) {
-            sendPluginKeyPressed(ofKey::OF_KEY_ALT);
-        }
-        else {
-            sendPluginKeyReleased(ofKey::OF_KEY_ALT);
-        }
-    }
-    
-    if (([nsevent modifierFlags] & NSControlKeyMask) != keyCtrlPressed) {
-        keyCtrlPressed = !keyCtrlPressed;
-        if (keyCtrlPressed) {
-            sendPluginKeyPressed(ofKey::OF_KEY_CONTROL);
-        }
-        else {
-            sendPluginKeyReleased(ofKey::OF_KEY_CONTROL);
-        }
-    }
-    
-    if (([nsevent modifierFlags] & NSShiftKeyMask) != keyShiftPressed) {
-        keyShiftPressed = !keyShiftPressed;
-        if (keyShiftPressed) {
-            sendPluginKeyPressed(ofKey::OF_KEY_SHIFT);
-        }
-        else {
-            sendPluginKeyReleased(ofKey::OF_KEY_SHIFT);
-        }
-    }
-    
-    if (([nsevent modifierFlags] & NSCommandKeyMask) != keyCommandPressed) {
-        keyCommandPressed = !keyCommandPressed;
-        if (keyCommandPressed) {
-            sendPluginKeyPressed(ofKey::OF_KEY_COMMAND);
-        }
-        else {
-            sendPluginKeyReleased(ofKey::OF_KEY_COMMAND);
-        }
-    }
-}
-
 void HotJuiceComponent::addKeyboardMonitor()
 {
-
     [NSEvent addLocalMonitorForEventsMatchingMask: NSEventMaskFlagsChanged|NSEventMaskKeyDown|NSEventMaskKeyUp handler:^NSEvent*(NSEvent* event){
         if (!isWindowFocused) { return event; }
         
@@ -201,6 +155,7 @@ void HotJuiceComponent::addKeyboardMonitor()
             if (convertedKey == -1) convertedKey = event.keyCode;
             sendPluginKeyPressed(convertedKey);
             keysPressed[convertedKey] = KeyPress(convertedKey).getTextCharacter();
+
             return nil;
         }
 
