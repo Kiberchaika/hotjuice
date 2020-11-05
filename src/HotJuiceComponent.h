@@ -86,7 +86,7 @@ public:
     void makeTransparent();
 
 #ifndef WIN32
-    bool isMainWindow = false;
+    bool isWindowFocused = false;
     
     void checkMainWindow();
     void checkModifierKeys(void* nsevent);

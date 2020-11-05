@@ -175,6 +175,7 @@ bool HotJuiceComponent::keyPressed(const KeyPress & key, Component * originating
     return true;
 }
 
+// This works on Windows, gets called when modifier keys are pressed
 bool HotJuiceComponent::keyStateChanged(bool isKeyDown, juce::Component * originatingComponent) {
 	 
 	if (ModifierKeys::getCurrentModifiers().isAltDown() != keyAltPressed) {
