@@ -170,7 +170,7 @@ bool HotJuiceComponent::keyPressed(const KeyPress & key, Component * originating
     }
 
     int k = convertKey(keyCode);
-    sendPluginKeyPressed(k >= 0 ? k : keysPressed[keyCode]);
+    directlySendPluginKeyPressed(k >= 0 ? k : keysPressed[keyCode]);
 
     return true;
 }
@@ -181,40 +181,40 @@ bool HotJuiceComponent::keyStateChanged(bool isKeyDown, juce::Component * origin
 	if (ModifierKeys::getCurrentModifiers().isAltDown() != keyAltPressed) {
 		keyAltPressed = !keyAltPressed;
 		if (keyAltPressed) {
-			sendPluginKeyPressed(ofKey::OF_KEY_ALT);
+			directlySendPluginKeyPressed(ofKey::OF_KEY_ALT);
 		}
 		else {
-			sendPluginKeyReleased(ofKey::OF_KEY_ALT);
+			directlySendPluginKeyReleased(ofKey::OF_KEY_ALT);
 		}
 	}
 
 	if (ModifierKeys::getCurrentModifiers().isCtrlDown() != keyCtrlPressed) {
 		keyCtrlPressed = !keyCtrlPressed;
 		if (keyCtrlPressed) {
-			sendPluginKeyPressed(ofKey::OF_KEY_CONTROL);
+			directlySendPluginKeyPressed(ofKey::OF_KEY_CONTROL);
 		}
 		else {
-			sendPluginKeyReleased(ofKey::OF_KEY_CONTROL);
+			directlySendPluginKeyReleased(ofKey::OF_KEY_CONTROL);
 		}
 	}
 
 	if (ModifierKeys::getCurrentModifiers().isShiftDown() != keyShiftPressed) {
 		keyShiftPressed = !keyShiftPressed;
 		if (keyShiftPressed) {
-			sendPluginKeyPressed(ofKey::OF_KEY_SHIFT);
+			directlySendPluginKeyPressed(ofKey::OF_KEY_SHIFT);
 		}
 		else {
-			sendPluginKeyReleased(ofKey::OF_KEY_SHIFT);
+			directlySendPluginKeyReleased(ofKey::OF_KEY_SHIFT);
 		}
 	}
 
 	if (ModifierKeys::getCurrentModifiers().isCommandDown() != keyCommandPressed) {
 		keyCommandPressed = !keyCommandPressed;
 		if (keyCommandPressed) {
-			sendPluginKeyPressed(ofKey::OF_KEY_COMMAND);
+			directlySendPluginKeyPressed(ofKey::OF_KEY_COMMAND);
 		}
 		else {
-			sendPluginKeyReleased(ofKey::OF_KEY_COMMAND);
+			directlySendPluginKeyReleased(ofKey::OF_KEY_COMMAND);
 		}
 	}
 	 
@@ -226,20 +226,20 @@ bool HotJuiceComponent::keyStateChanged(bool isKeyDown, juce::Component * origin
             keysPressed.erase(iter);
 
             int k = convertKey(keyCode);
-            sendPluginKeyReleased(k >= 0 ? k : textCharacter);
+            directlySendPluginKeyReleased(k >= 0 ? k : textCharacter);
             break;
         }
     }
     return true;
 }
 
-void HotJuiceComponent::sendPluginKeyPressed(int keyCode) {
+void HotJuiceComponent::directlySendPluginKeyPressed(int keyCode) {
     if (!processor->isReloading && plugin) {
         plugin->keyPressed(keyCode);
     }
 }
 
-void HotJuiceComponent::sendPluginKeyReleased(int keyCode) {
+void HotJuiceComponent::directlySendPluginKeyReleased(int keyCode) {
     if (!processor->isReloading && plugin) {
         plugin->keyReleased(keyCode);
     }
