@@ -78,15 +78,12 @@ void HotJuiceComponent::checkMainWindow()
 void HotJuiceComponent::addKeyboardMonitor()
 {
     [NSEvent addLocalMonitorForEventsMatchingMask: NSEventMaskFlagsChanged|NSEventMaskKeyDown|NSEventMaskKeyUp handler:^NSEvent*(NSEvent* event){
-        if (!isWindowFocused) { return event; }
+        // TODO: isWindowFocused sometimes doesn't work the first time you switch to this window.
+        // Supposedly this only happens in AudioPluginHost due to a bug in it. Should investigate in other hosts.
+        // For now, I'm removing the check for window focus, therefore the key presses will be sent to all windows.
         
+//        if (!isWindowFocused) { return event; }
         
-        /// A TRUE WAY TO MEASURE KEYPRESS / KEYRELEASE for modifier keys
-        /// 1) type = NSEventFlagsChanged
-        /// 2) check the event code. Does it correspond to the modifier key?
-        /// 3) if it corresponds, check the event modifier flags. If on, keypress and record. If off, keyrelease.
-        /// 4) whenever it's !isMainWindow, need to send keyrelease for every non-released keypress.
-
         // First, let's check if any of the modifier keys were pressed
         if (event.type == NSEventTypeFlagsChanged) {
 
