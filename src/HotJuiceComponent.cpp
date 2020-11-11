@@ -34,8 +34,7 @@ HotJuiceComponent::HotJuiceComponent()
 
 HotJuiceComponent::~HotJuiceComponent()
 {
-    // This shuts down the GL system and stops the rendering calls.
-    shutdownOpenGL();
+    openGLContext.deactivateCurrentContext();
 }
 
 #ifdef  WIN32

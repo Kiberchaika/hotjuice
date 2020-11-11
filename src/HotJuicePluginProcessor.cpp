@@ -7,6 +7,7 @@
 
 HotJuicePluginProcessor::HotJuicePluginProcessor()
 {
+    pluginManager = nullptr;
 }
     
 void HotJuicePluginProcessor::setup(std::vector<std::string> pluginObjectNames,  std::string pluginFilename, std::string pluginEnclosingFolder, std::vector<std::string> additionalFilesToCopy)
@@ -56,13 +57,13 @@ void HotJuicePluginProcessor::setup(std::vector<std::string> pluginObjectNames, 
 HotJuicePluginProcessor::~HotJuicePluginProcessor()
 {
 	for (int i = 0; i < plugins.size(); i++) {
-		if (plugins[i]) {
+		if (plugins[i] != nullptr) {
 			delete plugins[i];
 			plugins[i] = nullptr;
 		}
 	}
 
-    if (pluginManager) {
+    if (pluginManager != nullptr) {
         delete pluginManager;
         pluginManager = nullptr;
     }
