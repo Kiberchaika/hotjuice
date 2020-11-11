@@ -35,6 +35,10 @@ class HotJuiceComponent : public OpenGLAppComponent, public KeyListener
         OF_KEY_BACKSPACE = 8,
         OF_KEY_DEL = 127,
         
+        OF_KEY_RETURN    =    13,
+        OF_KEY_ESC        =    27,
+        OF_KEY_TAB      =    9,
+        
         OF_KEY_F1 = 0xe000,
         OF_KEY_F2 = 0xe001,
         OF_KEY_F3 = 0xe002,
