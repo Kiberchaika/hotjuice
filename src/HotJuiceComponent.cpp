@@ -139,6 +139,7 @@ void HotJuiceComponent::mouseUp(const MouseEvent& event) {
 }
 
 int HotJuiceComponent::convertKey(int key) {
+    #ifdef  WIN32
     if (key == KeyPress::F1Key) return ofKey::OF_KEY_F1;
     if (key == KeyPress::F2Key) return ofKey::OF_KEY_F2;
     if (key == KeyPress::F3Key) return ofKey::OF_KEY_F3;
@@ -159,7 +160,20 @@ int HotJuiceComponent::convertKey(int key) {
     if (key == KeyPress::endKey) return ofKey::OF_KEY_END;
     if (key == KeyPress::deleteKey) return ofKey::OF_KEY_DEL;
     if (key == KeyPress::backspaceKey) return ofKey::OF_KEY_BACKSPACE;
+    #else // Mac key codes
+    if (key == 123) return ofKey::OF_KEY_LEFT;
+    if (key == 124) return ofKey::OF_KEY_RIGHT;
+    if (key == 126) return ofKey::OF_KEY_UP;
+    if (key == 125) return ofKey::OF_KEY_DOWN;
+    if (key == 51) return ofKey::OF_KEY_BACKSPACE;
+    if (key == 36) return ofKey::OF_KEY_RETURN;
+    if (key == 53) return ofKey::OF_KEY_ESC;
+    if (key == 48) return ofKey::OF_KEY_TAB;
+    #endif
+    
     return -1;
+    
+
 }
 
 bool HotJuiceComponent::keyPressed(const KeyPress & key, Component * originatingComponent)
