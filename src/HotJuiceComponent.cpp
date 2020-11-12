@@ -35,6 +35,7 @@ HotJuiceComponent::HotJuiceComponent()
 HotJuiceComponent::~HotJuiceComponent()
 {
     openGLContext.deactivateCurrentContext();
+    openGLContext.detach();
 }
 
 #ifdef  WIN32
