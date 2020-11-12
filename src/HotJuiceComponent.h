@@ -7,6 +7,7 @@
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
+#include <objc/objc.h>
 #else
 //#include <GL/gl.h>
 //#include <GL/glu.h>
@@ -93,7 +94,11 @@ public:
     bool isWindowFocused = false;
     
     void checkMainWindow();
+    
     void addKeyboardMonitor();
+    void removeKeyboardMonitor();
+    
+    id keyboardMonitor;
 #endif
     
 	std::map<int, juce_wchar> keysPressed;

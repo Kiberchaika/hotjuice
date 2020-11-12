@@ -75,9 +75,15 @@ void HotJuiceComponent::checkMainWindow()
     }
 }
 
+void HotJuiceComponent::removeKeyboardMonitor()
+{
+    [NSEvent removeMonitor:keyboardMonitor];
+}
+
 void HotJuiceComponent::addKeyboardMonitor()
 {
-    [NSEvent addLocalMonitorForEventsMatchingMask: NSEventMaskFlagsChanged|NSEventMaskKeyDown|NSEventMaskKeyUp handler:^NSEvent*(NSEvent* event){
+    keyboardMonitor = [NSEvent addLocalMonitorForEventsMatchingMask: NSEventMaskFlagsChanged|NSEventMaskKeyDown|NSEventMaskKeyUp handler:^NSEvent*(NSEvent* event){
+        
         // TODO: isWindowFocused sometimes doesn't work the first time you switch to this window.
         // Supposedly this only happens in AudioPluginHost due to a bug in it. Should investigate in other hosts.
         // For now, I'm removing the check for window focus, therefore the key presses will be sent to all windows.
