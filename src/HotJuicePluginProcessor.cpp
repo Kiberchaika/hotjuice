@@ -8,6 +8,11 @@
 HotJuicePluginProcessor::HotJuicePluginProcessor()
 {
     pluginManager = nullptr;
+
+	isReloading = false;
+
+	callbackBeforeLoad = nullptr;
+	callbackAfterLoad = nullptr;
 }
     
 void HotJuicePluginProcessor::setup(std::vector<std::string> pluginObjectNames,  std::string pluginFilename, std::string pluginEnclosingFolder, std::vector<std::string> additionalFilesToCopy)
@@ -25,6 +30,8 @@ void HotJuicePluginProcessor::setup(std::vector<std::string> pluginObjectNames, 
 		[&]() -> void {
 		std::cout << "callback" << std::endl;
 
+		if (callbackBeforeLoad) callbackBeforeLoad();
+
 		isReloading = true;
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -36,10 +43,11 @@ void HotJuicePluginProcessor::setup(std::vector<std::string> pluginObjectNames, 
 		std::cout << "callback" << std::endl;
 
 		for (int i = 0; i < plugins.size(); i++) {
+			plugins[i]->setNeededToSetupRender();
 			plugins[i]->setup();
 		}
 
-        needToReinitRender = true;
+		if (callbackAfterLoad) callbackAfterLoad();
 
         isReloading = false;
 	}

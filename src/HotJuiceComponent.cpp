@@ -59,7 +59,9 @@ void HotJuiceComponent::initialise()
 		makeTransparent();
 	}
 
-	processor->needToReinitRender = true;
+	if (plugin) {
+		plugin->setNeededToSetupRender();
+	}
 }
 
 void HotJuiceComponent::shutdown()
@@ -74,7 +76,7 @@ void HotJuiceComponent::render()
 	lastFrameTime = std::chrono::high_resolution_clock::now();
 
 	if (!processor->isReloading && plugin) {
-		if (processor->needToReinitRender) {
+		if (plugin->isNeededToSetupRender()) {
 			plugin->setupRenderer();
 			plugin->addCallback("hideCursor", [&](void* in, void* out) {
 				setMouseCursor(MouseCursor::NoCursor);
@@ -88,12 +90,10 @@ void HotJuiceComponent::render()
 					Desktop::setMousePosition(localPointToGlobal(juce::Point<int>(pos[0], pos[1])));
 				}
 			});
-			processor->needToReinitRender = false;
 		}
 
 		/*
 		plugin->custom("test");
-		plugin->custom("test2");
 		*/
         
 		// This clears the context with a black background.

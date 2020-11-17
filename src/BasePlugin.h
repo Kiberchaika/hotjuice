@@ -34,52 +34,41 @@ PLUGIN_ADD_CONSTRUCTOR(className) \
 }(), 0);
 
 namespace hotjuice {
-    class PluginParameter {
-    public:
+    struct PluginParameter {
         // parameter base class
         std::type_index type_index = std::type_index(typeid(NULL));
         std::string name = "";
-        
-        PluginParameter(){};
     };
 
     template<typename TYPE>
     class PluginParameterOfType: public PluginParameter {
     public:
         std::function<TYPE()> getValue;
-
         std::function<void(TYPE)> setValue;
         
-        PluginParameterOfType(std::string parameterName,
-                              std::function<TYPE()> getter,
-                              std::function<void(TYPE)> setter) {
-            type_index = std::type_index(typeid(TYPE));
-            name = parameterName;
-            getValue = getter;
-            setValue = setter;
-        }
+		PluginParameterOfType(std::string parameterName, std::function<TYPE()> getter, std::function<void(TYPE)> setter) {
+			type_index = std::type_index(typeid(TYPE));
+			name = parameterName;
+			getValue = getter;
+			setValue = setter;
+		}
 
         #if defined(JUCE_APP_VERSION)
-
         juce::RangedAudioParameter* parameterPointer;
-        
+		PluginParameterOfType(juce::AudioParameterFloat * parameter) {
+			name = parameter->name.toStdString();
+			parameterPointer = parameter;
+			type_index = std::type_index(typeid(float));
+			getValue = [&]()->float {
+				return ((juce::AudioParameterFloat*)parameterPointer)->get();
 
-        PluginParameterOfType(juce::AudioParameterFloat* parameter) {
-            name = parameter->name.toStdString();
-            parameterPointer = parameter;
-            type_index = std::type_index(typeid(float));
-            getValue = [&]()->float{
-                return ((juce::AudioParameterFloat*)parameterPointer)->get();
-                
-            };
-            setValue = [&](float v){
-                float normalizedValue = ((juce::AudioParameterFloat*)parameterPointer)->convertTo0to1(v);
-                ((juce::AudioParameterFloat*)parameterPointer)->setValueNotifyingHost(normalizedValue);
-            };
-        }
-        
+			};
+			setValue = [&](float v) {
+				float normalizedValue = ((juce::AudioParameterFloat*)parameterPointer)->convertTo0to1(v);
+				((juce::AudioParameterFloat*)parameterPointer)->setValueNotifyingHost(normalizedValue);
+			};
+		}
         #endif
-
     };
 
 
@@ -147,7 +136,8 @@ namespace hotjuice {
 	namespace PluginUtils {
 		void addConstrutor(std::string name, std::function<void*()> function);
 	};
-};
+	
+	};
 
 #if defined(_WIN32)
 #define HOTJUICE_API __declspec(dllexport)

@@ -10,7 +10,8 @@ namespace hotjuice {
 		std::string pluginName;
 
 		friend class PluginManager;
-        
+		
+		bool neededToSetupRender;
         
 	public:
 		Plugin(BasePlugin* basePlugin, std::vector<Plugin*>* plugins, std::string namePlugin);
@@ -20,6 +21,9 @@ namespace hotjuice {
 
         BasePlugin* getPtrPlugin();
 		const char* getPluginName();
+
+		void setNeededToSetupRender();
+		bool isNeededToSetupRender();
 
 		void setReloaded();
 		bool isReloaded();

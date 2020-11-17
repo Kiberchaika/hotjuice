@@ -13,7 +13,9 @@ public:
 	hotjuice::PluginManager* pluginManager;
 	std::vector<hotjuice::Plugin*> plugins;
 	
-	bool needToReinitRender;
+	std::function<void(void)> callbackBeforeLoad;
+	std::function<void(void)> callbackAfterLoad;
+
 	bool isReloading;
 
     HotJuicePluginProcessor();
