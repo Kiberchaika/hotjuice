@@ -124,6 +124,7 @@ public:
 		double time = ofGetElapsedTimef();
 
 		m.begin();
+		m.setFont("Roboto-Regular.ttf", 10);
 
 		Pane::Parameters paneParameters;
 		paneParameters.firstPanelDraw = [&](MurkaContext& c) {

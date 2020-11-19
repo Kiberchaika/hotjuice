@@ -35,18 +35,15 @@ void ofApp::setup(){
 
 #if defined (_WIN32)
 	std::string pluginPath = "MyCompany/Hotjuice oF and JUCE example";
-	std::string pluginEnclosingFolder = hotjuice::Utils::getAppDataDirectory() + pluginPath;
 	pluginManager->setAdditionalFilesToCopy({ "FreeImage.dll", "fmodex64.dll","fmodexL64.dll" });
-	pluginManager->setupWithHotReloading(pluginEnclosingFolder, pluginFilename, pluginEnclosingFolder + "/tempPlugins");
 #elif defined (__APPLE__)
 	std::string pluginPath = "MyCompany/com.company.application";
-	std::string pluginEnclosingFolder = hotjuice::Utils::getAppDataDirectory() + pluginPath;
 	pluginManager->setAdditionalFilesToCopy({ "libfmodex.dylib" });
-	pluginManager->setupWithHotReloading(pluginEnclosingFolder, pluginFilename, pluginEnclosingFolder + "/tempPlugins");
 #endif
+	std::string pluginEnclosingFolder = hotjuice::Utils::getAppDataDirectory() + pluginPath;
+	pluginManager->setupWithHotReloading(pluginEnclosingFolder, pluginFilename, pluginEnclosingFolder + "/tempPlugins");
 
 	isReloading = false;
-	needToReinitRender = true;
 
 	//plugin = nullptr;
 
@@ -64,16 +61,16 @@ void ofApp::setup(){
 		[&]() -> void {
 		std::cout << "callback" << std::endl;
 
+		plugin->setNeededToSetupRender();
 		plugin->setup();
 
 		isReloading = false;
-
-		needToReinitRender = true;
 	}
 	);
 
 	plugin = pluginManager->createPluginObject("MyPlugin");
 	if (plugin) {
+		plugin->setNeededToSetupRender();
 		plugin->setup();
 	}
 
@@ -95,9 +92,8 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 	if (!isReloading && plugin) {
-		if (needToReinitRender) {
+		if (plugin->isNeededToSetupRender()) {
 			plugin->setupRenderer();
-			needToReinitRender = false;
 		}
 
 		float desktopScale = 1.0;

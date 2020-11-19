@@ -7,7 +7,6 @@ class ofApp : public ofBaseApp {
 	hotjuice::PluginManager* pluginManager;
 	hotjuice::Plugin* plugin;
 
-	bool needToReinitRender;
 	bool isReloading;
 
 public:

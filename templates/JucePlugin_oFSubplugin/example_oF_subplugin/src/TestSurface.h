@@ -29,7 +29,8 @@ public:
         panLimits.size.x = 0;
         
         // Then use .panOffset to transform view
-        
+		context.renderer->setColor(255);
+
         int howManyLabelsDidWeDraw = 0;
         for (int i = 0; i < 100; i++) {
             
