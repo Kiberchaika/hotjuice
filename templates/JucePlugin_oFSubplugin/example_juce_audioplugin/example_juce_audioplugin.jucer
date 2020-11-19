@@ -4,9 +4,6 @@
               jucerVersion="5.4.5" pluginFormats="buildVST3" pluginManufacturer="example_juce_audioplugin">
   <MAINGROUP id="YhGEjL" name="example_juce_audioplugin">
     <GROUP id="{5A51FE8A-D9F6-28EE-2A56-BD53B224D9ED}" name="Source">
-      <FILE id="QcpO2C" name="MainComponent.cpp" compile="1" resource="0"
-            file="Source/MainComponent.cpp"/>
-      <FILE id="D7Fv8l" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="OI7dEs" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="wFFTk8" name="PluginProcessor.h" compile="0" resource="0"

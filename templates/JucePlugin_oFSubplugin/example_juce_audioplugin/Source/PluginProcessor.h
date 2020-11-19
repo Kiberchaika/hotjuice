@@ -18,6 +18,7 @@
 */
 class Juceglvst_audioProcessor  : public HotJuicePluginProcessor, public AudioProcessor, public Timer
 {
+	hotjuice::Plugin* plugin;
 
 public:
     //==============================================================================

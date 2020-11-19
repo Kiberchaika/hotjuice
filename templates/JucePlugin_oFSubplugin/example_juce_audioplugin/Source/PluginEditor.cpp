@@ -22,6 +22,7 @@ Juceglvst_audioProcessorEditor::Juceglvst_audioProcessorEditor (Juceglvst_audioP
     hotJuiceComponent = new HotJuiceComponent();
     hotJuiceComponent->setSize(getWidth(), getHeight());
     hotJuiceComponent->processor = &p;
+	hotJuiceComponent->plugin = p.plugins[0];
 
     addAndMakeVisible(hotJuiceComponent);
 }

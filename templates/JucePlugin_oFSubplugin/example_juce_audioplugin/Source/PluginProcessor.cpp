@@ -30,18 +30,15 @@ Juceglvst_audioProcessor::Juceglvst_audioProcessor()
 
 #if defined (_WIN32)
 	HotJuicePluginProcessor::setup(
-		"MyPlugin", "example_oF_subplugin",
-		juce::File::getSpecialLocation(juce::File::SpecialLocationType::userApplicationDataDirectory).
-		getChildFile("MyCompany/Hotjuice oF and JUCE example").getFullPathName().toStdString(),
+		{ "MyPlugin" }, "example_oF_subplugin",
+		juce::File::getSpecialLocation(juce::File::SpecialLocationType::userApplicationDataDirectory).getChildFile("MyCompany/Hotjuice oF and JUCE example").getFullPathName().toStdString(),
 		{ "FreeImage.dll", "fmodex64.dll","fmodexL64.dll" }
 	);
 #elif defined (__APPLE__)
 	HotJuicePluginProcessor::setup(
-		"MyPlugin", "example_oF_subplugin",
-		juce::File::getSpecialLocation(juce::File::SpecialLocationType::userApplicationDataDirectory).
-		getChildFile("Application Support").getChildFile("MyCompany/com.company.applicatione").getFullPathName().toStdString(),
+		{ "MyPlugin" }, "example_oF_subplugin",
+		juce::File::getSpecialLocation(juce::File::SpecialLocationType::userApplicationDataDirectory).getChildFile("Application Support").getChildFile("MyCompany/com.company.applicatione").getFullPathName().toStdString(),
 		{ "libfmodex.dylib" }
-		
 	);
 #endif
 
@@ -52,8 +49,11 @@ void Juceglvst_audioProcessor::timerCallback()
 {
 	pluginManager->tryToLoadIfUpdated();
 
-	if (!isReloading && plugin) {
-		plugin->update();
+	if (!isReloading && plugins[0]) {
+		float in[2] = { 0, 0 };
+		float out = 0;
+
+		plugins[0]->update(&in, &out);
 	}
 }
 
