@@ -112,6 +112,7 @@ namespace hotjuice {
 
 		virtual void setWindowSize(int w, int h);
 		virtual void setDesktopScale(float desktopScale);
+		virtual void setClipboardCallbacks(std::function<std::string(void)> getCallback, std::function<void(std::string)> setCallback);
 
 		virtual void mouseDragged(int x, int y, int button);
 		virtual void mouseMoved(int x, int y);

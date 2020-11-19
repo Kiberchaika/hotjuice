@@ -14,7 +14,7 @@ HotJuiceComponent::HotJuiceComponent()
 	pixelFormat.multisamplingLevel = 8;
 	openGLContext.setPixelFormat(pixelFormat);
 
-    setSize(1, 1);
+    setSize(1, 1); 
 #ifdef  WIN32
 	setWantsKeyboardFocus(true);
 #endif
@@ -58,10 +58,6 @@ void HotJuiceComponent::initialise()
 	if (isTransparent) {
 		makeTransparent();
 	}
-
-	if (plugin) {
-		plugin->setNeededToSetupRender();
-	}
 }
 
 void HotJuiceComponent::shutdown()
@@ -78,6 +74,10 @@ void HotJuiceComponent::render()
 	if (!processor->isReloading && plugin) {
 		if (plugin->isNeededToSetupRender()) {
 			plugin->setupRenderer();
+			plugin->setClipboardCallbacks(
+				[&]() -> std::string { return SystemClipboard::getTextFromClipboard().toStdString(); }, 
+				[&](std::string clipboard) -> void { SystemClipboard::copyTextToClipboard(clipboard); }
+			);
 			plugin->addCallback("hideCursor", [&](void* in, void* out) {
 				setMouseCursor(MouseCursor::NoCursor);
 			});
@@ -94,6 +94,7 @@ void HotJuiceComponent::render()
 
 		/*
 		plugin->custom("test");
+		plugin->custom("test2");
 		*/
         
 		// This clears the context with a black background.

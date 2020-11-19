@@ -54,6 +54,9 @@ void hotjuice::BasePlugin::setWindowSize(int w, int h) {
 void hotjuice::BasePlugin::setDesktopScale(float desktopScale) {
 }
 
+void hotjuice::BasePlugin::setClipboardCallbacks(std::function<std::string(void)> getCallback, std::function<void(std::string)> setCallback) {
+}
+
 void hotjuice::BasePlugin::mouseDragged(int x, int y, int button) {
 }
 

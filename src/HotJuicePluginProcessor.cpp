@@ -56,6 +56,7 @@ void HotJuicePluginProcessor::setup(std::vector<std::string> pluginObjectNames, 
 	for (int i = 0; i < plugins.size(); i++) {
 		plugins[i] = pluginManager->createPluginObject(pluginObjectNames[i].c_str());
 		if (plugins[i]) {
+			plugins[i]->setNeededToSetupRender();
 			plugins[i]->setup();
 		}
 	}

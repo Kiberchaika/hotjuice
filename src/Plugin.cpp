@@ -89,6 +89,10 @@ void hotjuice::Plugin::setDesktopScale(float desktopScale) {
 	if (basePlugin) basePlugin->setDesktopScale(desktopScale);
 }
 
+void hotjuice::Plugin::setClipboardCallbacks(std::function<std::string(void)> getCallback, std::function<void(std::string)> setCallback) {
+	if (basePlugin) basePlugin->setClipboardCallbacks(getCallback, setCallback);
+}
+
 void hotjuice::Plugin::mouseDragged(int x, int y, int button) {
 	if (basePlugin) basePlugin->mouseDragged(x, y, button);
 }
