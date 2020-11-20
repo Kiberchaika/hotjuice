@@ -220,8 +220,8 @@ public:
 
 		std::vector<float*> buffers = std::get<0>(data);
 		int channels = buffers.size();
-		int samples = std::get<1>(data);
-		double sampleRate = std::get<2>(data);
+		int bufferSize = std::get<1>(data);
+		int sampleRate = std::get<2>(data);
 
 		while (phase > TWO_PI) {
 			phase -= TWO_PI;
@@ -230,7 +230,7 @@ public:
 		float phaseOrig = phase;
 		for (int i = 0; i < buffers.size(); i++) {
 			phase = phaseOrig;
-			for (int j = 0; j < samples; j++) {
+			for (int j = 0; j < bufferSize; j++) {
 				phase += 0.025;
 				buffers[i][j] = 0.2 * sin(phase);
 			}
