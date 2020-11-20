@@ -11,6 +11,10 @@ HotJuicePluginProcessor::HotJuicePluginProcessor()
 
 	isReloading = false;
 
+	position = 0;
+	sampleRate = 0;
+	bufferSize = 0;
+
 	callbackBeforeLoad = nullptr;
 	callbackAfterLoad = nullptr;
 }
@@ -63,6 +67,12 @@ void HotJuicePluginProcessor::setup(std::vector<std::string> pluginObjectNames, 
 	
 }
 
+void HotJuicePluginProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
+{
+	this->sampleRate = sampleRate;
+	this->bufferSize = samplesPerBlock;
+}
+
 HotJuicePluginProcessor::~HotJuicePluginProcessor()
 {
 	for (int i = 0; i < plugins.size(); i++) {
@@ -78,22 +88,45 @@ HotJuicePluginProcessor::~HotJuicePluginProcessor()
     }
 }
 
-void HotJuicePluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages, int totalNumInputChannels, int totalNumOutputChannels, int sampleRate)
+void HotJuicePluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages, int totalNumInputChannels, int totalNumOutputChannels, double sampleRate)
 {
-	std::tuple<std::vector<float*>, int, double> data;
-	for (int channel = 0; channel < totalNumInputChannels; ++channel) {
-		std::get<0>(data).push_back(buffer.getWritePointer(channel));
-		std::get<1>(data) = buffer.getNumSamples();
-		std::get<2>(data) = sampleRate;
-	}
-
-	if (!isReloading) {
-		for (int i = 0; i < plugins.size(); i++) {
-			if (plugins[i]) {
-				plugins[i]->process(&data, nullptr);
-			}
+	if (audioData.size() != totalNumInputChannels) {
+		for (int i = 0; i < totalNumInputChannels; i++) {
+			audioData.push_back(std::vector<float>(bufferSize, 0));
 		}
 	}
+
+	int inputPosition = 0;
+	int inputBufferSize = buffer.getNumSamples();
+
+	while (inputPosition < inputBufferSize) {
+		int cnt = (std::min)(bufferSize - position, inputBufferSize - inputPosition);
+		for (int channel = 0; channel < totalNumInputChannels; ++channel) {
+			memcpy(audioData[channel].data() + sizeof(float) * position, buffer.getWritePointer(channel) + sizeof(float) * inputPosition, sizeof(float) * cnt);
+		}
+		inputPosition += cnt;
+		position += cnt;
+
+		if (position == bufferSize) {
+			std::tuple<std::vector<float*>, int, double> audioDataPackage;
+			for (int channel = 0; channel < totalNumInputChannels; ++channel) {
+				std::get<0>(audioDataPackage).push_back(audioData[channel].data());
+			}
+			std::get<1>(audioDataPackage) = bufferSize;
+			std::get<2>(audioDataPackage) = sampleRate;
+
+			if (!isReloading) {
+				for (int i = 0; i < plugins.size(); i++) {
+					if (plugins[i]) {
+						plugins[i]->process(&audioDataPackage, nullptr);
+					}
+				}
+			}
+
+			position = 0;
+		}
+	}
+
 }
 
 #endif

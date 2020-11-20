@@ -216,12 +216,12 @@ public:
 	float phase = 0;
 
 	void process(void* in, void* out) override {
-		std::tuple<std::vector<float*>, int, double>& data = *(std::tuple<std::vector<float*>, int, double> *)in;
+		std::tuple<std::vector<float*>, int, double>& audioDataPackage = *(std::tuple<std::vector<float*>, int, double> *)in;
 
-		std::vector<float*> buffers = std::get<0>(data);
+		std::vector<float*> buffers = std::get<0>(audioDataPackage);
 		int channels = buffers.size();
-		int bufferSize = std::get<1>(data);
-		int sampleRate = std::get<2>(data);
+		int bufferSize = std::get<1>(audioDataPackage);
+		int sampleRate = std::get<2>(audioDataPackage);
 
 		while (phase > TWO_PI) {
 			phase -= TWO_PI;
