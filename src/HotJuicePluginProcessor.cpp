@@ -102,7 +102,7 @@ void HotJuicePluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
 	while (inputPosition < inputBufferSize) {
 		int cnt = (std::min)(bufferSize - position, inputBufferSize - inputPosition);
 		for (int channel = 0; channel < totalNumInputChannels; ++channel) {
-			memcpy(audioData[channel].data() + sizeof(float) * position, buffer.getWritePointer(channel) + sizeof(float) * inputPosition, sizeof(float) * cnt);
+			memcpy(&audioData[channel].data()[ position], &buffer.getWritePointer(channel)[ inputPosition], sizeof(float) * cnt);
 		}
 		inputPosition += cnt;
 		position += cnt;
