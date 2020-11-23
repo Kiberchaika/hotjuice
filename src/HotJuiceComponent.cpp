@@ -55,6 +55,10 @@ void HotJuiceComponent::initialise()
 	getTopLevelComponent()->addKeyListener(this);
 #endif
     
+	if (plugin) {
+		plugin->setNeededToSetupRender();
+	}
+
 	if (isTransparent) {
 		makeTransparent();
 	}
@@ -98,10 +102,9 @@ void HotJuiceComponent::render()
 		*/
         
 		// This clears the context with a black background.
-		OpenGLHelpers::clear(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+		OpenGLHelpers::clear(juce::Colours::transparentBlack);
 
 		float desktopScale = openGLContext.getRenderingScale();
-        //float desktopScale = Desktop::getInstance().getDisplays().findDisplayForRect (getScreenBounds()).scale;
         plugin->setDesktopScale(desktopScale);
 		plugin->setWindowSize(roundToInt(desktopScale * getWidth()), roundToInt(desktopScale * getHeight()));
 
@@ -173,8 +176,6 @@ int HotJuiceComponent::convertKey(int key) {
     #endif
     
     return -1;
-    
-
 }
 
 bool HotJuiceComponent::keyPressed(const KeyPress & key, Component * originatingComponent)
