@@ -41,7 +41,6 @@ const char* hotjuice::Plugin::getPluginName() {
 
 void hotjuice::Plugin::setNeededToSetupRender() {
 	neededToSetupRender = true;
-    neededToReloadData = false;
 }
 
 bool hotjuice::Plugin::isNeededToSetupRender() {
