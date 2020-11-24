@@ -6,6 +6,9 @@
 #elif defined(__APPLE__)
 #endif
 
+#include <chrono>
+#include <thread>
+
 void hotjuice::Utils::clearSubdirectories(std::string path) {
 #if defined(JUCE_APP_VERSION)
 	juce::Array<juce::File> files = juce::File(path).findChildFiles(File::TypesOfFileToFind::findFilesAndDirectories, true);
@@ -129,7 +132,7 @@ unsigned long long hotjuice::Utils::getFileModificationTime(std::string path) {
 #else
 	return std::filesystem::last_write_time(ofFile(path));
 #endif
-}
+} 
 
 unsigned long long hotjuice::Utils::getElapsedTimeMillis() {
 #if defined(JUCE_APP_VERSION)
@@ -146,3 +149,8 @@ void hotjuice::Utils::Execute(std::string command) {
     system(command.c_str());
 #endif
 }
+
+void hotjuice::Utils::Sleep(int ms) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+}
+

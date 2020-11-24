@@ -6,7 +6,8 @@ hotjuice::Plugin::Plugin(BasePlugin * basePlugin, std::vector<Plugin*>* plugins,
 	this->pluginName = pluginName;
 
 	neededToSetupRender = false;
-    neededToPrepareRender = true;
+    neededToReloadData = false;
+    neededToCloseRender = false;
 }
 
 hotjuice::Plugin::~Plugin() {
@@ -40,14 +41,27 @@ const char* hotjuice::Plugin::getPluginName() {
 
 void hotjuice::Plugin::setNeededToSetupRender() {
 	neededToSetupRender = true;
+    neededToReloadData = false;
 }
 
 bool hotjuice::Plugin::isNeededToSetupRender() {
     return neededToSetupRender;
 }
 
-bool hotjuice::Plugin::isNeededToPrepareRender() {
-    return neededToPrepareRender;
+void hotjuice::Plugin::setNeededToReloadData() {
+    neededToReloadData = true;
+}
+
+bool hotjuice::Plugin::isNeededToReloadData() {
+    return neededToReloadData;
+}
+
+void hotjuice::Plugin::setNeededToCloseRender() {
+    neededToCloseRender = true;
+}
+
+bool hotjuice::Plugin::isNeededToCloseRender() {
+    return neededToCloseRender;
 }
 
 void hotjuice::Plugin::setReloaded(){
@@ -70,19 +84,19 @@ void hotjuice::Plugin::setupRenderer(void* in, void* out) {
 	}
 }
 
-void hotjuice::Plugin::prepareRenderer(void* in, void* out) {
+void hotjuice::Plugin::prepareToStartRendering(bool reloadData) {
+    if (basePlugin) basePlugin->prepareToStartRendering(reloadData);
+}
+
+void hotjuice::Plugin::prepareToStopRendering() {
+    if (basePlugin) basePlugin->prepareToStopRendering();
+}
+
+void hotjuice::Plugin::closeRenderer(void* in, void* out) {
     if (basePlugin) {
-        basePlugin->prepareRenderer(in, out);
-        neededToPrepareRender = false;
+        basePlugin->closeRenderer();
+        neededToCloseRender = false;
     }
-}
-
-void hotjuice::Plugin::updateRenderer(void* in, void* out) {
-    if (basePlugin) basePlugin->updateRenderer(in, out);
-}
-
-void hotjuice::Plugin::cleanupRenderer(void* in, void* out) {
-    if (basePlugin) basePlugin->cleanupRenderer(in, out);
 }
 
 void hotjuice::Plugin::update(void* in, void* out) {

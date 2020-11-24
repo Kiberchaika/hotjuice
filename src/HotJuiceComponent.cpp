@@ -68,7 +68,7 @@ void HotJuiceComponent::shutdown()
 {
     // Free any GL objects created for rendering here.
     if (plugin) {
-        plugin->cleanupRenderer();
+        plugin->prepareToStopRendering();
     }
 }
 
@@ -77,49 +77,55 @@ void HotJuiceComponent::render()
 	// limit fps
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - lastFrameTime) < std::chrono::milliseconds{ 1000 / 30 }) return;
 	lastFrameTime = std::chrono::high_resolution_clock::now();
-    
-	if (!processor->isReloading && plugin) {
-       
-        if (plugin->isNeededToSetupRender()) {
-			plugin->setupRenderer();
-            
-			plugin->setClipboardCallbacks(
-				[&]() -> std::string { return SystemClipboard::getTextFromClipboard().toStdString(); }, 
-				[&](std::string clipboard) -> void { SystemClipboard::copyTextToClipboard(clipboard); }
-			);
-			plugin->addCallback("hideCursor", [&](void* in, void* out) {
-				setMouseCursor(MouseCursor::NoCursor);
-			});
-			plugin->addCallback("showCursor", [&](void* in, void* out) {
-				setMouseCursor(MouseCursor::NormalCursor);
-			});
-			plugin->addCallback("setCursorPosition", [&](void* in, void* out) {
-				if (in != nullptr) {
-					int(&pos)[2] = *reinterpret_cast<int(*)[2]>(in);
-					Desktop::setMousePosition(localPointToGlobal(juce::Point<int>(pos[0], pos[1])));
-				}
-			});
-            
-            if(plugin->isNeededToPrepareRender()) {
-                plugin->prepareRenderer();
-            }
-            else {
-                plugin->updateRenderer();
-            }
-		}
 
-		/*
-		plugin->custom("test");
-		plugin->custom("test2");
-		*/
-        
-        float desktopScale = openGLContext.getRenderingScale();
-        plugin->setDesktopScale(desktopScale);
-		plugin->setWindowSize(roundToInt(desktopScale * getWidth()), roundToInt(desktopScale * getHeight()));
-
-        OpenGLHelpers::clear(juce::Colours::transparentBlack);
-		plugin->draw();
-	}
+    if(plugin) {
+        if (!processor->isReloading) {
+            if (plugin->isNeededToSetupRender()) {
+                plugin->setupRenderer();
+                
+                plugin->setClipboardCallbacks(
+                                              [&]() -> std::string { return SystemClipboard::getTextFromClipboard().toStdString(); },
+                                              [&](std::string clipboard) -> void { SystemClipboard::copyTextToClipboard(clipboard); }
+                                              );
+                plugin->addCallback("hideCursor", [&](void* in, void* out) {
+                    setMouseCursor(MouseCursor::NoCursor);
+                });
+                plugin->addCallback("showCursor", [&](void* in, void* out) {
+                    setMouseCursor(MouseCursor::NormalCursor);
+                });
+                plugin->addCallback("setCursorPosition", [&](void* in, void* out) {
+                    if (in != nullptr) {
+                        int(&pos)[2] = *reinterpret_cast<int(*)[2]>(in);
+                        Desktop::setMousePosition(localPointToGlobal(juce::Point<int>(pos[0], pos[1])));
+                    }
+                });
+                
+                if(!plugin->isNeededToReloadData()) {
+                    plugin->prepareToStartRendering(false);
+                    plugin->setNeededToReloadData();
+                }
+                else {
+                    plugin->prepareToStartRendering(true);
+                }
+            }
+            
+            /*
+             plugin->custom("test");
+             plugin->custom("test2");
+             */
+            
+            float desktopScale = openGLContext.getRenderingScale();
+            plugin->setDesktopScale(desktopScale);
+            plugin->setWindowSize(roundToInt(desktopScale * getWidth()), roundToInt(desktopScale * getHeight()));
+            
+            OpenGLHelpers::clear(juce::Colours::transparentBlack);
+            plugin->draw();
+        }
+        else if (plugin->isNeededToCloseRender()) {
+            plugin->prepareToStopRendering();
+            plugin->closeRenderer();
+        }
+    }
 }
 
 void HotJuiceComponent::mouseDrag(const MouseEvent & event)
