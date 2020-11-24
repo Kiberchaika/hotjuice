@@ -201,9 +201,9 @@ bool HotJuiceComponent::keyPressed(const KeyPress & key, Component * originating
     }
 
     int k = convertKey(keyCode);
-    directlySendPluginKeyPressed(k >= 0 ? k : keysPressed[keyCode]);
+    auto subpluginResult = sendKeyPressedToSubplugin(k >= 0 ? k : keysPressed[keyCode]);
 
-    return true;
+    return subpluginResult;
 }
 
 // This works on Windows, gets called when modifier keys are pressed
@@ -212,40 +212,40 @@ bool HotJuiceComponent::keyStateChanged(bool isKeyDown, juce::Component * origin
 	if (ModifierKeys::getCurrentModifiers().isAltDown() != keyAltPressed) {
 		keyAltPressed = !keyAltPressed;
 		if (keyAltPressed) {
-			directlySendPluginKeyPressed(ofKey::OF_KEY_ALT);
+			sendKeyPressedToSubplugin(ofKey::OF_KEY_ALT);
 		}
 		else {
-			directlySendPluginKeyReleased(ofKey::OF_KEY_ALT);
+			sendKeyReleasedToSubPlugin(ofKey::OF_KEY_ALT);
 		}
 	}
 
 	if (ModifierKeys::getCurrentModifiers().isCtrlDown() != keyCtrlPressed) {
 		keyCtrlPressed = !keyCtrlPressed;
 		if (keyCtrlPressed) {
-			directlySendPluginKeyPressed(ofKey::OF_KEY_CONTROL);
+			sendKeyPressedToSubplugin(ofKey::OF_KEY_CONTROL);
 		}
 		else {
-			directlySendPluginKeyReleased(ofKey::OF_KEY_CONTROL);
+			sendKeyReleasedToSubPlugin(ofKey::OF_KEY_CONTROL);
 		}
 	}
 
 	if (ModifierKeys::getCurrentModifiers().isShiftDown() != keyShiftPressed) {
 		keyShiftPressed = !keyShiftPressed;
 		if (keyShiftPressed) {
-			directlySendPluginKeyPressed(ofKey::OF_KEY_SHIFT);
+			sendKeyPressedToSubplugin(ofKey::OF_KEY_SHIFT);
 		}
 		else {
-			directlySendPluginKeyReleased(ofKey::OF_KEY_SHIFT);
+			sendKeyReleasedToSubPlugin(ofKey::OF_KEY_SHIFT);
 		}
 	}
 
 	if (ModifierKeys::getCurrentModifiers().isCommandDown() != keyCommandPressed) {
 		keyCommandPressed = !keyCommandPressed;
 		if (keyCommandPressed) {
-			directlySendPluginKeyPressed(ofKey::OF_KEY_COMMAND);
+			sendKeyPressedToSubplugin(ofKey::OF_KEY_COMMAND);
 		}
 		else {
-			directlySendPluginKeyReleased(ofKey::OF_KEY_COMMAND);
+			sendKeyReleasedToSubPlugin(ofKey::OF_KEY_COMMAND);
 		}
 	}
 	 
@@ -257,23 +257,25 @@ bool HotJuiceComponent::keyStateChanged(bool isKeyDown, juce::Component * origin
             keysPressed.erase(iter);
 
             int k = convertKey(keyCode);
-            directlySendPluginKeyReleased(k >= 0 ? k : textCharacter);
+            sendKeyReleasedToSubPlugin(k >= 0 ? k : textCharacter);
             break;
         }
     }
     return true;
 }
 
-void HotJuiceComponent::directlySendPluginKeyPressed(int keyCode) {
+bool HotJuiceComponent::sendKeyPressedToSubplugin(int keyCode) {
     if (!processor->isReloading && plugin) {
-        plugin->keyPressed(keyCode);
+        return plugin->keyPressed(keyCode);
     }
+    return false;
 }
 
-void HotJuiceComponent::directlySendPluginKeyReleased(int keyCode) {
+bool HotJuiceComponent::sendKeyReleasedToSubPlugin(int keyCode) {
     if (!processor->isReloading && plugin) {
-        plugin->keyReleased(keyCode);
+        return plugin->keyReleased(keyCode);
     }
+    return false;
 }
 
 //==============================================================================

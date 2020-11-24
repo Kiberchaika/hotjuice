@@ -54,8 +54,8 @@ namespace hotjuice {
 		void mousePressed(int x, int y, int button);
 		void mouseReleased(int x, int y, int button);
 
-		void keyPressed(int key);
-		void keyReleased(int key);
+		bool keyPressed(int key);
+		bool keyReleased(int key);
 
 		void custom(char* name, void* in = nullptr, void* out = nullptr);
 		void addCallback(char*, std::function<void(void*, void*)> callback);

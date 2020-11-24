@@ -78,10 +78,10 @@ void hotjuice::BasePlugin::mousePressed(int x, int y, int button) {
 void hotjuice::BasePlugin::mouseReleased(int x, int y, int button) {
 }
 
-void hotjuice::BasePlugin::keyPressed(int key) {
+bool hotjuice::BasePlugin::keyPressed(int key) {
 }
 
-void hotjuice::BasePlugin::keyReleased(int key) {
+bool hotjuice::BasePlugin::keyReleased(int key) {
 }
 
 void hotjuice::BasePlugin::addCustomFunction(std::string name, hotjuice::BasePlugin::CustomFunc func) {
