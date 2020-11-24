@@ -195,9 +195,9 @@ bool HotJuiceComponent::keyPressed(const KeyPress & key, Component * originating
     }
 
     int k = convertKey(keyCode);
-    sendKeyPressedToSubplugin(k >= 0 ? k : keysPressed[keyCode]);
+    auto subpluginResult = sendKeyPressedToSubplugin(k >= 0 ? k : keysPressed[keyCode]);
 
-    return true;
+    return subpluginResult;
 }
 
 // This works on Windows, gets called when modifier keys are pressed
@@ -258,16 +258,18 @@ bool HotJuiceComponent::keyStateChanged(bool isKeyDown, juce::Component * origin
     return true;
 }
 
-void HotJuiceComponent::sendKeyPressedToSubplugin(int keyCode) {
+bool HotJuiceComponent::sendKeyPressedToSubplugin(int keyCode) {
     if (!processor->isReloading && plugin) {
-        plugin->keyPressed(keyCode);
+        return plugin->keyPressed(keyCode);
     }
+    return false;
 }
 
-void HotJuiceComponent::sendKeyReleasedToSubPlugin(int keyCode) {
+bool HotJuiceComponent::sendKeyReleasedToSubPlugin(int keyCode) {
     if (!processor->isReloading && plugin) {
-        plugin->keyReleased(keyCode);
+        return plugin->keyReleased(keyCode);
     }
+    return false;
 }
 
 //==============================================================================

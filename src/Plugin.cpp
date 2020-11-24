@@ -129,12 +129,16 @@ void hotjuice::Plugin::mouseReleased(int x, int y, int button) {
 	if (basePlugin) basePlugin->mouseReleased(x, y, button);
 }
 
-void hotjuice::Plugin::keyPressed(int key) {
-	if (basePlugin) basePlugin->keyPressed(key);
+bool hotjuice::Plugin::keyPressed(int key) {
+    if (basePlugin) {
+        return basePlugin->keyPressed(key);
+    } else return false;
 }
 
-void hotjuice::Plugin::keyReleased(int key) {
-	if (basePlugin) basePlugin->keyReleased(key);
+bool hotjuice::Plugin::keyReleased(int key) {
+    if (basePlugin) {
+        return basePlugin->keyReleased(key);
+    } else return false;
 }
 
 void hotjuice::Plugin::custom(char* name, void* in, void* out) {

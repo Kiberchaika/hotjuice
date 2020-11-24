@@ -99,11 +99,11 @@ void HotJuiceComponent::addKeyboardMonitor()
                 if ([event modifierFlags] & NSEventModifierFlagShift) {
                     sendKeyPressedToSubplugin(ofKey::OF_KEY_SHIFT);
                     keyShiftPressed = true;
-                    return nil;
+                    return event;
                 } else {
                     sendKeyReleasedToSubPlugin(ofKey::OF_KEY_SHIFT);
                     keyShiftPressed = false;
-                    return nil;
+                    return event;
                 }
             }
 
@@ -113,11 +113,11 @@ void HotJuiceComponent::addKeyboardMonitor()
                 if ([event modifierFlags] & NSEventModifierFlagControl) {
                     sendKeyPressedToSubplugin(ofKey::OF_KEY_CONTROL);
                     keyCtrlPressed = true;
-                    return nil;
+                    return event;
                 } else {
                     sendKeyReleasedToSubPlugin(ofKey::OF_KEY_CONTROL);
                     keyCtrlPressed = false;
-                    return nil;
+                    return event;
                 }
             }
 
@@ -127,11 +127,11 @@ void HotJuiceComponent::addKeyboardMonitor()
                 if ([event modifierFlags] & NSEventModifierFlagOption) {
                     sendKeyPressedToSubplugin(ofKey::OF_KEY_ALT);
                     keyAltPressed = true;
-                    return nil;
+                    return event;
                 } else {
                     sendKeyReleasedToSubPlugin(ofKey::OF_KEY_ALT);
                     keyAltPressed = false;
-                    return nil;
+                    return event;
                 }
             }
             
@@ -141,11 +141,11 @@ void HotJuiceComponent::addKeyboardMonitor()
                 if ([event modifierFlags] & NSEventModifierFlagCommand) {
                     sendKeyPressedToSubplugin(ofKey::OF_KEY_COMMAND);
                     keyCommandPressed = true;
-                    return nil;
+                    return event;
                 } else {
                     sendKeyReleasedToSubPlugin(ofKey::OF_KEY_COMMAND);
                     keyCommandPressed = false;
-                    return nil;
+                    return event;
                 }
             }
             
@@ -156,19 +156,29 @@ void HotJuiceComponent::addKeyboardMonitor()
             auto convertedKey = convertKey(event.keyCode);
             if (convertedKey == -1) convertedKey = [event.characters characterAtIndex:0];
             
-            sendKeyPressedToSubplugin(convertedKey);
+            auto subpluginResult = sendKeyPressedToSubplugin(convertedKey);
             keysPressed[convertedKey] = KeyPress(convertedKey).getTextCharacter();
 
-            return nil;
+            if (subpluginResult) {
+                return nil;
+            } else {2
+                return event;
+            }
         }
 
         if (event.type == NSEventTypeKeyUp) {
             auto convertedKey = convertKey(event.keyCode);
             if (convertedKey == -1) convertedKey = [event.characters characterAtIndex:0];
             
-            sendKeyReleasedToSubPlugin(convertedKey);
+            auto subpluginResult = sendKeyReleasedToSubPlugin(convertedKey);
             keysPressed.erase(convertedKey);
-            return nil;
+            
+            if (subpluginResult) {
+                return nil;
+            } else {
+                return event;
+            }
+
         }
          
 
