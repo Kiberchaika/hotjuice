@@ -161,7 +161,7 @@ void HotJuiceComponent::addKeyboardMonitor()
 
             if (subpluginResult) {
                 return nil;
-            } else {2
+            } else {
                 return event;
             }
         }
