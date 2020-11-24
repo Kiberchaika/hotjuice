@@ -36,6 +36,15 @@ void hotjuice::BasePlugin::setup(void * in, void * out) {
 void hotjuice::BasePlugin::setupRenderer(void * in, void * out) {
 }
 
+void hotjuice::BasePlugin::prepareRenderer(void * in, void * out) {
+}
+
+void hotjuice::BasePlugin::updateRenderer(void * in, void * out) {
+}
+
+void hotjuice::BasePlugin::cleanupRenderer(void * in, void * out) {
+}
+
 void hotjuice::BasePlugin::update(void * in, void * out) {
 }
 

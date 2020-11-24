@@ -68,7 +68,7 @@ public:
 	std::chrono::time_point<std::chrono::steady_clock> lastFrameTime;
 	hotjuice::Plugin* plugin;
 	bool isTransparent;
-
+    
 public:
     //==============================================================================
 	HotJuiceComponent();
