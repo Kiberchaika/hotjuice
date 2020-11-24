@@ -11,7 +11,8 @@ namespace hotjuice {
 
 		friend class PluginManager;
 		
-		bool neededToSetupRender;
+        bool neededToSetupRender;
+        bool neededToPrepareRender;
         
 	public:
 		Plugin(BasePlugin* basePlugin, std::vector<Plugin*>* plugins, std::string namePlugin);
@@ -25,11 +26,16 @@ namespace hotjuice {
 		void setNeededToSetupRender();
 		bool isNeededToSetupRender();
 
+        bool isNeededToPrepareRender();
+
 		void setReloaded();
 		bool isReloaded();
 
 		void setup(void* in = nullptr, void* out = nullptr);
 		void setupRenderer(void* in = nullptr, void* out = nullptr);
+        void prepareRenderer(void* in = nullptr, void* out = nullptr);
+        void updateRenderer(void* in = nullptr, void* out = nullptr);
+        void cleanupRenderer(void* in = nullptr, void* out = nullptr);
 		void update(void* in = nullptr, void* out = nullptr);
 		void process(void* in = nullptr, void* out = nullptr);
 		void draw(void* in = nullptr, void* out = nullptr);

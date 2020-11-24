@@ -6,6 +6,7 @@ hotjuice::Plugin::Plugin(BasePlugin * basePlugin, std::vector<Plugin*>* plugins,
 	this->pluginName = pluginName;
 
 	neededToSetupRender = false;
+    neededToPrepareRender = true;
 }
 
 hotjuice::Plugin::~Plugin() {
@@ -42,7 +43,11 @@ void hotjuice::Plugin::setNeededToSetupRender() {
 }
 
 bool hotjuice::Plugin::isNeededToSetupRender() {
-	return neededToSetupRender;
+    return neededToSetupRender;
+}
+
+bool hotjuice::Plugin::isNeededToPrepareRender() {
+    return neededToPrepareRender;
 }
 
 void hotjuice::Plugin::setReloaded(){
@@ -63,6 +68,21 @@ void hotjuice::Plugin::setupRenderer(void* in, void* out) {
 		basePlugin->setupRenderer(in, out);
 		neededToSetupRender = false;
 	}
+}
+
+void hotjuice::Plugin::prepareRenderer(void* in, void* out) {
+    if (basePlugin) {
+        basePlugin->prepareRenderer(in, out);
+        neededToPrepareRender = false;
+    }
+}
+
+void hotjuice::Plugin::updateRenderer(void* in, void* out) {
+    if (basePlugin) basePlugin->updateRenderer(in, out);
+}
+
+void hotjuice::Plugin::cleanupRenderer(void* in, void* out) {
+    if (basePlugin) basePlugin->cleanupRenderer(in, out);
 }
 
 void hotjuice::Plugin::update(void* in, void* out) {

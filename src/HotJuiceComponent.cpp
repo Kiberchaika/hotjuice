@@ -67,6 +67,9 @@ void HotJuiceComponent::initialise()
 void HotJuiceComponent::shutdown()
 {
     // Free any GL objects created for rendering here.
+    if (plugin) {
+        plugin->cleanupRenderer();
+    }
 }
 
 void HotJuiceComponent::render()
@@ -74,10 +77,12 @@ void HotJuiceComponent::render()
 	// limit fps
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - lastFrameTime) < std::chrono::milliseconds{ 1000 / 30 }) return;
 	lastFrameTime = std::chrono::high_resolution_clock::now();
-
+    
 	if (!processor->isReloading && plugin) {
-		if (plugin->isNeededToSetupRender()) {
+       
+        if (plugin->isNeededToSetupRender()) {
 			plugin->setupRenderer();
+            
 			plugin->setClipboardCallbacks(
 				[&]() -> std::string { return SystemClipboard::getTextFromClipboard().toStdString(); }, 
 				[&](std::string clipboard) -> void { SystemClipboard::copyTextToClipboard(clipboard); }
@@ -94,6 +99,13 @@ void HotJuiceComponent::render()
 					Desktop::setMousePosition(localPointToGlobal(juce::Point<int>(pos[0], pos[1])));
 				}
 			});
+            
+            if(plugin->isNeededToPrepareRender()) {
+                plugin->prepareRenderer();
+            }
+            else {
+                plugin->updateRenderer();
+            }
 		}
 
 		/*
@@ -101,16 +113,13 @@ void HotJuiceComponent::render()
 		plugin->custom("test2");
 		*/
         
-		// This clears the context with a black background.
-		OpenGLHelpers::clear(juce::Colours::transparentBlack);
-
-		float desktopScale = openGLContext.getRenderingScale();
+        float desktopScale = openGLContext.getRenderingScale();
         plugin->setDesktopScale(desktopScale);
 		plugin->setWindowSize(roundToInt(desktopScale * getWidth()), roundToInt(desktopScale * getHeight()));
 
+        OpenGLHelpers::clear(juce::Colours::transparentBlack);
 		plugin->draw();
 	}
-	
 }
 
 void HotJuiceComponent::mouseDrag(const MouseEvent & event)
