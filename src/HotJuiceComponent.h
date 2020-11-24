@@ -112,8 +112,8 @@ public:
 	bool keyPressed(const KeyPress &key, Component *originatingComponent) override;
 	bool keyStateChanged(bool isKeyDown, juce::Component *originatingComponent) override;
 
-	void directlySendPluginKeyPressed(int keyCode);
-	void directlySendPluginKeyReleased(int keyCode);
+	void sendKeyPressedToSubplugin(int keyCode);
+	void sendKeyReleasedToSubPlugin(int keyCode);
 
  
     
