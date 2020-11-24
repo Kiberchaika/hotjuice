@@ -38,6 +38,10 @@ void HotJuicePluginProcessor::setup(std::vector<std::string> pluginObjectNames, 
 
 		isReloading = true;
 
+        for (int i = 0; i < plugins.size(); i++) {
+           plugins[i]->setNeededToCloseRender();
+        }
+
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 	);

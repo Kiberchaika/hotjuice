@@ -29,6 +29,7 @@ namespace hotjuice {
 
 		unsigned long long getElapsedTimeMillis();
 
+        void Sleep(int ms);
 		void Execute(std::string command);
 	};
 };
