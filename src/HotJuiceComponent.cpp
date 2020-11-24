@@ -62,6 +62,10 @@ void HotJuiceComponent::initialise()
 	if (isTransparent) {
 		makeTransparent();
 	}
+    
+    OpenGLHelpers::clear(juce::Colours::transparentBlack);
+
+
 }
 
 void HotJuiceComponent::shutdown()
