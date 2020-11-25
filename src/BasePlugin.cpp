@@ -36,7 +36,7 @@ void hotjuice::BasePlugin::setup(void * in, void * out) {
 void hotjuice::BasePlugin::setupRenderer(void * in, void * out) {
 }
 
-void hotjuice::BasePlugin::prepareToStartRendering(bool reloadData) {
+void hotjuice::BasePlugin::prepareToStartRendering(bool shouldReloadData) {
 }
 
 void hotjuice::BasePlugin::prepareToStopRendering() {
@@ -79,9 +79,11 @@ void hotjuice::BasePlugin::mouseReleased(int x, int y, int button) {
 }
 
 bool hotjuice::BasePlugin::keyPressed(int key) {
+	return false;
 }
 
 bool hotjuice::BasePlugin::keyReleased(int key) {
+	return false;
 }
 
 void hotjuice::BasePlugin::addCustomFunction(std::string name, hotjuice::BasePlugin::CustomFunc func) {

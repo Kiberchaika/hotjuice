@@ -56,7 +56,7 @@ void HotJuiceComponent::initialise()
 #endif
     
 	if (plugin) {
-		plugin->setNeededToSetupRender();
+		plugin->setState(hotjuice::PluginStateSetupRender);
 	}
 
 	if (isTransparent) {
@@ -84,9 +84,9 @@ void HotJuiceComponent::render()
 
     if(plugin) {
         if (!processor->isReloading) {
-            if (plugin->isNeededToSetupRender()) {
+            if (plugin->getState() == hotjuice::PluginStateSetupRender) {
                 plugin->setupRenderer();
-                
+
                 plugin->setClipboardCallbacks(
                                               [&]() -> std::string { return SystemClipboard::getTextFromClipboard().toStdString(); },
                                               [&](std::string clipboard) -> void { SystemClipboard::copyTextToClipboard(clipboard); }
@@ -104,19 +104,15 @@ void HotJuiceComponent::render()
                     }
                 });
                 
-                if(!plugin->isNeededToReloadData()) {
-                    plugin->prepareToStartRendering(false);
-                    plugin->setNeededToReloadData();
-                }
-                else {
-                    plugin->prepareToStartRendering(true);
-                }
-            }
+				plugin->prepareToStartRendering(plugin->doNeedToReloadData());
+				plugin->setNeedToReloadData();
+ 
+				plugin->setState(hotjuice::PluginStateNone);
+			}
             
             /*
-             plugin->custom("test");
-             plugin->custom("test2");
-             */
+            plugin->custom("test");
+            */
             
             float desktopScale = openGLContext.getRenderingScale();
             plugin->setDesktopScale(desktopScale);
@@ -125,9 +121,10 @@ void HotJuiceComponent::render()
             OpenGLHelpers::clear(juce::Colours::transparentBlack);
             plugin->draw();
         }
-        else if (plugin->isNeededToCloseRender()) {
+        else if (plugin->getState() == hotjuice::PluginStateSetupRender) {
             plugin->prepareToStopRendering();
             plugin->closeRenderer();
+			plugin->setState(hotjuice::PluginStateNone);
         }
     }
 }

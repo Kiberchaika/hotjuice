@@ -4,16 +4,22 @@
 
 namespace hotjuice {
 
+	enum PluginState {
+		PluginStateNone = 0,
+		PluginStateSetupRender,
+		PluginStateCloseRender
+	};
+
 	class Plugin {
 		BasePlugin* basePlugin;
 		std::vector<Plugin*>* plugins;
 		std::string pluginName;
+		PluginState pluginState;
 
 		friend class PluginManager;
 		
-        bool neededToSetupRender;
-        bool neededToReloadData;
-        bool neededToCloseRender;
+		bool needToReloadData;
+
 	public:
 		Plugin(BasePlugin* basePlugin, std::vector<Plugin*>* plugins, std::string namePlugin);
 		~Plugin();
@@ -23,21 +29,19 @@ namespace hotjuice {
         BasePlugin* getPtrPlugin();
 		const char* getPluginName();
 
-		void setNeededToSetupRender();
-		bool isNeededToSetupRender();
+		void setState(PluginState pluginState);
 
-        void setNeededToReloadData();
-        bool isNeededToReloadData();
+		PluginState getState();
 
-        void setNeededToCloseRender();
-        bool isNeededToCloseRender();
+        void setNeedToReloadData();
+        bool doNeedToReloadData();
         
 		void setReloaded();
 		bool isReloaded();
 
 		void setup(void* in = nullptr, void* out = nullptr);
 		void setupRenderer(void* in = nullptr, void* out = nullptr);
-        void prepareToStartRendering(bool reloadData);
+        void prepareToStartRendering(bool shouldReloadData);
         void prepareToStopRendering();
         void closeRenderer(void* in = nullptr, void* out = nullptr);
 		void update(void* in = nullptr, void* out = nullptr);

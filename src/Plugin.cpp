@@ -4,10 +4,7 @@ hotjuice::Plugin::Plugin(BasePlugin * basePlugin, std::vector<Plugin*>* plugins,
 	this->basePlugin = basePlugin;
 	this->plugins = plugins;
 	this->pluginName = pluginName;
-
-	neededToSetupRender = false;
-    neededToReloadData = false;
-    neededToCloseRender = false;
+	this->pluginState = PluginStateNone;
 }
 
 hotjuice::Plugin::~Plugin() {
@@ -39,28 +36,20 @@ const char* hotjuice::Plugin::getPluginName() {
 	return pluginName.c_str();
 }
 
-void hotjuice::Plugin::setNeededToSetupRender() {
-	neededToSetupRender = true;
+void hotjuice::Plugin::setState(hotjuice::PluginState pluginState) {
+	this->pluginState = pluginState;
 }
 
-bool hotjuice::Plugin::isNeededToSetupRender() {
-    return neededToSetupRender;
+hotjuice::PluginState hotjuice::Plugin::getState() {
+	return pluginState;
 }
 
-void hotjuice::Plugin::setNeededToReloadData() {
-    neededToReloadData = true;
+void hotjuice::Plugin::setNeedToReloadData() {
+	needToReloadData = true;
 }
 
-bool hotjuice::Plugin::isNeededToReloadData() {
-    return neededToReloadData;
-}
-
-void hotjuice::Plugin::setNeededToCloseRender() {
-    neededToCloseRender = true;
-}
-
-bool hotjuice::Plugin::isNeededToCloseRender() {
-    return neededToCloseRender;
+bool hotjuice::Plugin::doNeedToReloadData() {
+	return needToReloadData;
 }
 
 void hotjuice::Plugin::setReloaded(){
@@ -77,14 +66,11 @@ void hotjuice::Plugin::setup(void* in, void* out) {
 }
 
 void hotjuice::Plugin::setupRenderer(void* in, void* out) {
-	if (basePlugin) {
-		basePlugin->setupRenderer(in, out);
-		neededToSetupRender = false;
-	}
+	if (basePlugin) basePlugin->setupRenderer(in, out);
 }
 
-void hotjuice::Plugin::prepareToStartRendering(bool reloadData) {
-    if (basePlugin) basePlugin->prepareToStartRendering(reloadData);
+void hotjuice::Plugin::prepareToStartRendering(bool shouldReloadData) {
+    if (basePlugin) basePlugin->prepareToStartRendering(shouldReloadData);
 }
 
 void hotjuice::Plugin::prepareToStopRendering() {
@@ -92,10 +78,7 @@ void hotjuice::Plugin::prepareToStopRendering() {
 }
 
 void hotjuice::Plugin::closeRenderer(void* in, void* out) {
-    if (basePlugin) {
-        basePlugin->closeRenderer();
-        neededToCloseRender = false;
-    }
+    if (basePlugin) basePlugin->closeRenderer();
 }
 
 void hotjuice::Plugin::update(void* in, void* out) {

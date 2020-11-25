@@ -105,7 +105,7 @@ namespace hotjuice {
 
 		virtual void setup(void* in = nullptr, void* out = nullptr);
         virtual void setupRenderer(void* in = nullptr, void* out = nullptr);
-        virtual void prepareToStartRendering(bool reloadData);
+        virtual void prepareToStartRendering(bool shouldReloadData);
         virtual void prepareToStopRendering();
         virtual void closeRenderer(void* in = nullptr, void* out = nullptr);
        

@@ -39,7 +39,7 @@ void HotJuicePluginProcessor::setup(std::vector<std::string> pluginObjectNames, 
 		isReloading = true;
 
         for (int i = 0; i < plugins.size(); i++) {
-           plugins[i]->setNeededToCloseRender();
+			plugins[i]->setState(hotjuice::PluginStateCloseRender);
         }
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -51,7 +51,7 @@ void HotJuicePluginProcessor::setup(std::vector<std::string> pluginObjectNames, 
 		std::cout << "callback" << std::endl;
 
 		for (int i = 0; i < plugins.size(); i++) {
-			plugins[i]->setNeededToSetupRender();
+			plugins[i]->setState(hotjuice::PluginStateSetupRender);
 			plugins[i]->setup();
 		}
 
@@ -64,7 +64,7 @@ void HotJuicePluginProcessor::setup(std::vector<std::string> pluginObjectNames, 
 	for (int i = 0; i < plugins.size(); i++) {
 		plugins[i] = pluginManager->createPluginObject(pluginObjectNames[i].c_str());
 		if (plugins[i]) {
-			plugins[i]->setNeededToSetupRender();
+			plugins[i]->setState(hotjuice::PluginStateSetupRender);
 			plugins[i]->setup();
 		}
 	}
