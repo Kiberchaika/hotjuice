@@ -86,6 +86,7 @@ void HotJuiceComponent::render()
         if (!processor->isReloading) {
             if (plugin->getState() == hotjuice::PluginStateSetupRender) {
                 plugin->setupRenderer();
+				plugin->prepareToStartRendering(plugin->doNeedToReloadData());
 
                 plugin->setClipboardCallbacks(
                                               [&]() -> std::string { return SystemClipboard::getTextFromClipboard().toStdString(); },
@@ -103,10 +104,8 @@ void HotJuiceComponent::render()
                         Desktop::setMousePosition(localPointToGlobal(juce::Point<int>(pos[0], pos[1])));
                     }
                 });
-                
-				plugin->prepareToStartRendering(plugin->doNeedToReloadData());
+
 				plugin->setNeedToReloadData();
- 
 				plugin->setState(hotjuice::PluginStateNone);
 			}
             
