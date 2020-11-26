@@ -72,12 +72,27 @@ public:
 
 		m.setWindow((ofAppBaseWindow*)(&window));
 		m.setRenderer((ofBaseGLRenderer*)(window.renderer().get()));
-		m.clearFontsCache();
-
-		//logo.clear();
-		//logo.load(pathToResources + "logo.png");
 	}
     
+	void prepareToStartRendering(bool shouldReloadData) override {
+		if (!shouldReloadData) {
+			logo.load(pathToResources + "mach1logo.png");
+		}
+		else {
+			logo.update();
+
+			m.updateFontsTextures(&m);
+			//   m.clearFontsCache();
+		}
+	}
+
+	void prepareToStopRendering() override {
+		logo.clearTexture();
+
+		m.clearFontsTextures();
+		// m.clearFontsCache();
+	}
+
 	void setup(void* in, void* out) override {
 		if (!isCloned) {
 			panes[0].position = 0.5;
@@ -195,14 +210,16 @@ public:
 		m.registerMouseReleased(x, y, button);
 	}
 
-	void keyPressed(int key) override {
+	bool keyPressed(int key) override {
 		//_log += string("keyPressed : ") + to_string(iIn[0]) + string("\r\n");
 		m.registerKeyPressed(key);
+		return true;
 	}
 
-	void keyReleased(int key) override {
+	bool keyReleased(int key) override {
 		//_log += string("keyReleased : ") + to_string(iIn[0]) + string("\r\n");
 		m.registerKeyReleased(key);
+		return true;
 	}
 
 	void update(void* in, void* out) override {
