@@ -53,6 +53,8 @@ void ofApp::setup(){
 
 		isReloading = true;
 
+		plugin->setState(hotjuice::PluginStateCloseRender);
+
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 	);
@@ -61,7 +63,7 @@ void ofApp::setup(){
 		[&]() -> void {
 		std::cout << "callback" << std::endl;
 
-		plugin->setNeededToSetupRender();
+		plugin->setState(hotjuice::PluginStateSetupRender);
 		plugin->setup();
 
 		isReloading = false;
@@ -70,7 +72,7 @@ void ofApp::setup(){
 
 	plugin = pluginManager->createPluginObject("MyPlugin");
 	if (plugin) {
-		plugin->setNeededToSetupRender();
+		plugin->setState(hotjuice::PluginStateSetupRender);
 		plugin->setup();
 	}
 
@@ -91,16 +93,27 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	if (!isReloading && plugin) {
-		if (plugin->isNeededToSetupRender()) {
-			plugin->setupRenderer();
+	if (plugin) {
+		if (!isReloading) {
+			if (plugin->getState() == hotjuice::PluginStateSetupRender) {
+				plugin->setupRenderer();
+				plugin->prepareToStartRendering(plugin->doNeedToReloadData());
+
+				plugin->setNeedToReloadData();
+				plugin->setState(hotjuice::PluginStateNone);
+			}
+
+			float desktopScale = 1.0;
+			plugin->setDesktopScale(desktopScale);
+			plugin->setWindowSize(ofGetWidth(), ofGetHeight());
+
+			plugin->draw();
 		}
-
-		float desktopScale = 1.0;
-		plugin->setDesktopScale(desktopScale);
-		plugin->setWindowSize(ofGetWidth(), ofGetHeight());
-
-		plugin->draw();
+		else if (plugin->getState() == hotjuice::PluginStateSetupRender) {
+			plugin->prepareToStopRendering();
+			plugin->closeRenderer();
+			plugin->setState(hotjuice::PluginStateNone);
+		}
 	}
 }
 

@@ -5,6 +5,8 @@ hotjuice::Plugin::Plugin(BasePlugin * basePlugin, std::vector<Plugin*>* plugins,
 	this->plugins = plugins;
 	this->pluginName = pluginName;
 	this->pluginState = PluginStateNone;
+
+	needToReloadData = false;
 }
 
 hotjuice::Plugin::~Plugin() {
