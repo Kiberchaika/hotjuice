@@ -120,7 +120,7 @@ void HotJuiceComponent::render()
             OpenGLHelpers::clear(juce::Colours::transparentBlack);
             plugin->draw();
         }
-        else if (plugin->getState() == hotjuice::PluginStateSetupRender) {
+        else if (plugin->getState() == hotjuice::PluginStateCloseRender) {
             plugin->prepareToStopRendering();
             plugin->closeRenderer();
 			plugin->setState(hotjuice::PluginStateNone);
