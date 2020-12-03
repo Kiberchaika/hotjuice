@@ -46,8 +46,8 @@ hotjuice::PluginState hotjuice::Plugin::getState() {
 	return pluginState;
 }
 
-void hotjuice::Plugin::setNeedToReloadData() {
-	needToReloadData = true;
+void hotjuice::Plugin::setNeedToReloadData(float needToReloadData) {
+	this->needToReloadData = needToReloadData;
 }
 
 bool hotjuice::Plugin::doNeedToReloadData() {

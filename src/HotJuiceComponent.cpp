@@ -105,7 +105,7 @@ void HotJuiceComponent::render()
                     }
                 });
 
-				plugin->setNeedToReloadData();
+				plugin->setNeedToReloadData(true);
 				plugin->setState(hotjuice::PluginStateNone);
 			}
             

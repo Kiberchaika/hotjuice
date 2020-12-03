@@ -6,7 +6,7 @@ namespace hotjuice {
 
 	enum PluginState {
 		PluginStateNone = 0,
-		PluginStateSetupRender,
+        PluginStateSetupRender,
 		PluginStateCloseRender
 	};
 
@@ -33,7 +33,7 @@ namespace hotjuice {
 
 		PluginState getState();
 
-        void setNeedToReloadData();
+        void setNeedToReloadData(float needToReloadData);
         bool doNeedToReloadData();
         
 		void setReloaded();
